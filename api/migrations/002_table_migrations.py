@@ -53,4 +53,31 @@ steps = [
         DROP TABLE activities;
         """,
     ],
+    [
+        # "Up" SQL statement
+        """
+        CREATE TABLE countries (
+            country_id SERIAL PRIMARY KEY NOT NULL,
+            country_name VARCHAR(50) NOT NULL
+        );
+        """,
+        # "Down" SQL statement
+        """
+        DROP TABLE countries;
+        """,
+    ],
+    [
+        # "Up" SQL statement
+        """
+        CREATE TABLE comments (
+            comment_id SERIAL PRIMARY KEY NOT NULL,
+            commenter VARCHAR(20) REFERENCES users(username) NOT NULL,
+            comment TEXT NOT NULL
+        );
+        """,
+        # "Down" SQL statement
+        """
+        DROP TABLE comments;
+        """,
+    ],
 ]
