@@ -34,4 +34,23 @@ steps = [
         DROP TABLE trips;
         """,
     ],
+    [
+        # "Up" SQL statement
+        """
+        CREATE TABLE activities (
+            activity_id SERIAL PRIMARY KEY NOT NULL,
+            trip INT REFERENCES trips(trip_id) NOT NULL,
+            title VARCHAR(50) NOT NULL,
+            url VARCHAR(250),
+            date VARCHAR(50) NOT NULL,
+            time VARCHAR(50) NOT NULL,
+            status VARCHAR(50) DEFAULT 'Pending',
+            vote SMALLINT DEFAULT 0
+        );
+        """,
+        # "Down" SQL statement
+        """
+        DROP TABLE activities;
+        """,
+    ],
 ]
