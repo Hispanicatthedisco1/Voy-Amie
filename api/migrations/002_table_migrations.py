@@ -14,6 +14,24 @@ steps = [
         # "Down" SQL statement
         """
         DROP TABLE users;
+        """,
+    ],
+    [
+        # "Up" SQL statement
         """
-    ]
+        CREATE TABLE trips (
+            trip_id SERIAL PRIMARY KEY NOT NULL,
+            planner VARCHAR(20) REFERENCES users(username) NOT NULL,
+            trip_name VARCHAR(50) NOT NULL,
+            city VARCHAR(50) NOT NULL,
+            country VARCHAR(50) NOT NULL,
+            start_date VARCHAR(50) NOT NULL,
+            end_date VARCHAR(50) NOT NULL
+        );
+        """,
+        # "Down" SQL statement
+        """
+        DROP TABLE trips;
+        """,
+    ],
 ]
