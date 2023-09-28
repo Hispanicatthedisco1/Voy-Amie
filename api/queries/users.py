@@ -19,15 +19,14 @@ class UsersOut(BaseModel):
     bio: Optional[str]
     profile_pic: Optional[str]
 
+class Error(BaseModel):
+    message: str
 
 
 class UsersRepository:
     def create_user(self, user:UsersIn) -> UsersOut:
-        #connect to the database
         with pool.connection() as conn:
-            #get a cursor(SQL)
             with conn.cursor() as db:
-                #Run our INSERT statement
                 result = db.execute(
                     """
                     INSERT INTO users
@@ -44,7 +43,6 @@ class UsersRepository:
                         user.profile_pic
                     ]
                 )
-                # Return new data
                 user_id = result.fetchone()[0]
                 old_data = user.dict()
                 return UsersOut(user_id=user_id, **old_data)
