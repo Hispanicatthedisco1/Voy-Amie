@@ -14,7 +14,6 @@ class UsersIn(BaseModel):
 class UsersOut(BaseModel):
     user_id: int
     username: str
-    password: str
     email: str
     bio: Optional[str]
     profile_pic: Optional[str]
@@ -22,22 +21,28 @@ class UsersOut(BaseModel):
 class Error(BaseModel):
     message: str
 
+class DuplicateAccountError(ValueError):
+    pass
+
+class UserOutWithPassword(UsersOut):
+    hashed_password: str
+
 
 class UsersRepository:
-    def create_user(self, user:UsersIn) -> UsersOut:
+    def create_user(self, user:UsersIn, hashed_password: str) -> UserOutWithPassword:
         with pool.connection() as conn:
             with conn.cursor() as db:
                 result = db.execute(
                     """
                     INSERT INTO users
-                        (username, password, email, bio, profile_pic)
+                        (username, hashed_password, email, bio, profile_pic)
                     VALUES
                         (%s, %s, %s, %s, %s)
                     RETURNING user_id;
                     """,
                     [
                         user.username,
-                        user.password,
+                        hashed_password,
                         user.email,
                         user.bio,
                         user.profile_pic
@@ -45,4 +50,26 @@ class UsersRepository:
                 )
                 user_id = result.fetchone()[0]
                 old_data = user.dict()
-                return UsersOut(user_id=user_id, **old_data)
+                return UserOutWithPassword(user_id=user_id, hashed_password=hashed_password, **old_data)
+
+    def get(self, username: str) -> UserOutWithPassword: 
+        with pool.connection() as conn:
+            with conn.cursor() as db:
+                result = db.execute(
+                    """
+                    SELECT user_id, username, hashed_password, email, bio, profile_pic
+                    FROM users
+                    WHERE username = %s
+                    """,
+                    [username],
+                )
+                record = result.fetchone()
+                return UserOutWithPassword(
+                    user_id = record[0],
+                    username = record[1],
+                    hashed_password = record[2],
+                    email = record[3],
+                    bio = record[4],
+                    profile_pic = record[5]
+                )
+                
