@@ -16,17 +16,22 @@ from queries.users import (
     UsersOut,
     UsersRepository,
     DuplicateAccountError,
+    UserOutWithPassword,
 )
+
 
 class UserForm(BaseModel):
     username: str
     password: str
 
+
 class UserToken(Token):
     user: UsersOut
 
+
 class HttpError(BaseModel):
     detail: str
+
 
 router = APIRouter()
 
@@ -49,3 +54,16 @@ async def create_user(
     form = UserForm(username=info.username, password=info.password)
     token = await authenticator.login(response, request, form, repo)
     return UserToken(user=user, **token.dict())
+
+
+@router.get("/token", response_model=UserToken | None)
+async def get_token(
+    request: Request,
+    user: UsersIn = Depends(authenticator.try_get_current_account_data),
+) -> UserToken | None:
+    if user and authenticator.cookie_name in request.cookies:
+        return {
+            "access_token": request.cookies[authenticator.cookie_name],
+            "type": "Bearer",
+            "user": user,
+        }
