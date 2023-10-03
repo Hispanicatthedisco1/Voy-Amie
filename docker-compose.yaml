@@ -7,6 +7,7 @@ services:
     environment:
       DATABASE_URL: postgresql://voyamie:voyamie@postgres/voyamie
       CORS_HOST: http://localhost:3000
+      SIGNING_KEY: c29e107e322959b6fb3be4d8311e4823a61a63d34c5e8568141b0e6f354a6781
     build:
       context: api
       dockerfile: Dockerfile.dev
