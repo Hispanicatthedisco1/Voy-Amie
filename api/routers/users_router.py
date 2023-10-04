@@ -18,6 +18,7 @@ from queries.users import (
     DuplicateAccountError,
     UserOutWithPassword,
 )
+from typing import Optional
 
 
 class UserForm(BaseModel):
@@ -67,3 +68,15 @@ async def get_token(
             "type": "Bearer",
             "user": user,
         }
+
+
+@router.get("/users/{username}", response_model=Optional[UserOutWithPassword])
+def get_one_user(
+    username: str,
+    response: Response,
+    repo: UsersRepository = Depends(),
+) -> UserOutWithPassword:
+    user = repo.get(username)
+    if user is None:
+        response.status_code = 404
+    return user

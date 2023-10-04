@@ -52,24 +52,28 @@ class UsersRepository:
                 old_data = user.dict()
                 return UserOutWithPassword(user_id=user_id, hashed_password=hashed_password, **old_data)
 
-    def get(self, username: str) -> UserOutWithPassword: 
-        with pool.connection() as conn:
-            with conn.cursor() as db:
-                result = db.execute(
-                    """
-                    SELECT user_id, username, hashed_password, email, bio, profile_pic
-                    FROM users
-                    WHERE username = %s
-                    """,
-                    [username],
-                )
-                record = result.fetchone()
-                return UserOutWithPassword(
-                    user_id = record[0],
-                    username = record[1],
-                    hashed_password = record[2],
-                    email = record[3],
-                    bio = record[4],
-                    profile_pic = record[5]
-                )
-                
+    def get(self, username: str) -> Optional[UserOutWithPassword]:
+        try:
+            with pool.connection() as conn:
+                with conn.cursor() as db:
+                    result = db.execute(
+                        """
+                        SELECT user_id, username, hashed_password, email, bio, profile_pic
+                        FROM users
+                        WHERE username = %s
+                        """,
+                        [username],
+                    )
+                    record = result.fetchone()
+                    if record is None:
+                        return None
+                    return UserOutWithPassword(
+                        user_id = record[0],
+                        username = record[1],
+                        hashed_password = record[2],
+                        email = record[3],
+                        bio = record[4],
+                        profile_pic = record[5])
+        except Exception as e:
+            print(e)
+            return {"message": "Could not get user."}
