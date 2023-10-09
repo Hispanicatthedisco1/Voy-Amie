@@ -75,6 +75,7 @@ def get_one_user(
     username: str,
     response: Response,
     repo: UsersRepository = Depends(),
+    user_data: dict = Depends(authenticator.get_current_account_data),
 ) -> UserOutWithPassword:
     user = repo.get(username)
     if user is None:
