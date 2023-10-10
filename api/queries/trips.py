@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, List, Union
 from queries.pool import pool
 
 
@@ -85,3 +85,36 @@ class TripsRepository:
         except Exception as e:
             print(e)
             return {"message": "Could not get trip."}
+
+    def update_trip(
+        self, trip_id: int, trip: TripIn, planner
+    ) -> Union[TripOut, Error]:
+        try:
+            with pool.connection() as conn:
+                with conn.cursor() as db:
+                    db.execute(
+                        """
+                        UPDATE trips
+                        SET trip_name=%s,
+                        city=%s,
+                        country=%s,
+                        start_date=%s,
+                        end_date=%s
+                        WHERE trip_id=%s
+                        """,
+                        [
+                            trip.trip_name,
+                            trip.city,
+                            trip.country,
+                            trip.start_date,
+                            trip.end_date,
+                            trip_id,
+                        ],
+                    )
+                    old_data = trip.dict()
+                    return TripOut(
+                        trip_id=trip_id, planner=planner, **old_data
+                    )
+        except Exception as e:
+            print(e)
+            return {"message": "Could not update trip."}

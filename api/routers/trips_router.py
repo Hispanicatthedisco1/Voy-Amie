@@ -9,7 +9,7 @@ from fastapi import (
 from authenticator import authenticator
 from jwtdown_fastapi.authentication import Token
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, Union, List
 from queries.trips import (
     TripIn,
     TripOut,
@@ -39,7 +39,6 @@ async def create_trip(
     repo: TripsRepository = Depends(),
 ):
     try:
-        print("PRINTING:", user_data)
         planner = user_data["username"]
         trip = repo.create_trip(info, planner=planner)
     except CreateTripError:
@@ -61,3 +60,14 @@ def get_trip(
     if trip is None:
         response.status_code = 404
     return trip
+
+
+@router.put("/trips/{trip_id}", response_model=Union[TripOut, Error])
+def update_trip(
+    trip_id: int,
+    trip: TripIn,
+    repo: TripsRepository = Depends(),
+    user_data: dict = Depends(authenticator.get_current_account_data),
+) -> Union[TripOut, Error]:
+    planner = user_data["username"]
+    return repo.update_trip(trip_id, trip, planner=planner)
