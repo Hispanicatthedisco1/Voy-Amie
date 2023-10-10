@@ -17,7 +17,7 @@ from queries.activities import (
     Error,
 )
 
-from typing import Union
+from typing import Union, List
 
 
 router = APIRouter()
@@ -30,3 +30,10 @@ def create_activity(
 ) -> Union[Error, ActivitiesOut]:
     return repo.create_activity(activity)
 
+
+@router.get("/activities", response_model=Union[List[ActivitiesOut], Error])
+async def get_all_activities(
+    activity_data: dict = Depends(authenticator.get_current_account_data),
+    repo: ActivitiesRespository = Depends(),
+): 
+    return repo.get_all_activities()
