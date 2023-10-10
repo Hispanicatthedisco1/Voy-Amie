@@ -4,7 +4,6 @@ from queries.pool import pool
 
 
 class CommentIn(BaseModel):
-    commenter: str
     comment: str
 
 
@@ -26,7 +25,7 @@ class CreateCommentError(ValueError):
 
 
 class CommentsRepository:
-    def create_comment(self, comment: CommentIn) -> CommentOut:
+    def create_comment(self, comment: CommentIn, commenter) -> CommentOut:
         with pool.connection() as conn:
             with conn.cursor() as db:
                 result = db.execute(
@@ -38,10 +37,10 @@ class CommentsRepository:
                     RETURNING comment_id;
                     """,
                     [
-                        comment.commenter,
+                        commenter,
                         comment.comment,
                     ],
                 )
                 comment_id = result.fetchone()[0]
                 old_data = comment.dict()
-                return CommentOut(comment_id=comment_id, **old_data)
+                return CommentOut(comment_id=comment_id, commenter=commenter, **old_data)

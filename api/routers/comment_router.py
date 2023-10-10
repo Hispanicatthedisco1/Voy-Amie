@@ -38,7 +38,8 @@ async def create_comment(
     repo: CommentsRepository = Depends(),
 ):
     try:
-        comment = repo.create_comment(info)
+        commenter = user_data["username"]
+        comment = repo.create_comment(info, commenter=commenter)
     except CreateCommentError:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
