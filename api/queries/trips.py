@@ -4,7 +4,6 @@ from queries.pool import pool
 
 
 class TripIn(BaseModel):
-    planner: str
     trip_name: str
     city: str
     country: str
@@ -31,7 +30,11 @@ class CreateTripError(ValueError):
 
 
 class TripsRepository:
-    def create_trip(self, trip: TripIn) -> TripOut:
+    def create_trip(
+        self,
+        trip: TripIn,
+        planner,
+    ) -> TripOut:
         with pool.connection() as conn:
             with conn.cursor() as db:
                 result = db.execute(
@@ -43,7 +46,7 @@ class TripsRepository:
                     RETURNING trip_id;
                     """,
                     [
-                        trip.planner,
+                        planner,
                         trip.trip_name,
                         trip.city,
                         trip.country,
@@ -53,4 +56,4 @@ class TripsRepository:
                 )
                 trip_id = result.fetchone()[0]
                 old_data = trip.dict()
-                return TripOut(trip_id=trip_id, **old_data)
+                return TripOut(trip_id=trip_id, planner=planner, **old_data)

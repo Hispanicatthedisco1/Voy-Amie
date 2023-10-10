@@ -39,7 +39,9 @@ async def create_trip(
     repo: TripsRepository = Depends(),
 ):
     try:
-        trip = repo.create_trip(info)
+        print("PRINTING:", user_data)
+        planner = user_data["username"]
+        trip = repo.create_trip(info, planner=planner)
     except CreateTripError:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
