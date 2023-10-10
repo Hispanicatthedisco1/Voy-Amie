@@ -44,3 +44,27 @@ class CommentsRepository:
                 comment_id = result.fetchone()[0]
                 old_data = comment.dict()
                 return CommentOut(comment_id=comment_id, commenter=commenter, **old_data)
+
+    def get_comment(self, comment_id: int) -> CommentOut:
+        try:
+            with pool.connection() as conn:
+                with conn.cursor() as db:
+                    result = db.execute(
+                            """
+                            SELECT comment_id, commenter, comment
+                            FROM comments
+                            WHERE comment_id=%s
+                            """,
+                            [comment_id],
+                        )
+                    record = result.fetchone()
+                    if record is None:
+                        return None
+                    return CommentOut(
+                        comment_id=record[0],
+                        commenter=record[1],
+                        comment=record[2]
+                    )
+        except Exception as e:
+            print(e)
+            return {"message": "Could not get comment."}
