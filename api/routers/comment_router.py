@@ -16,6 +16,7 @@ from queries.comments import (
     CommentsRepository,
     CreateCommentError,
     )
+from typing import Optional
 
 
 class CommentToken(Token):
@@ -45,4 +46,16 @@ async def create_comment(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Cannot create a comment.",
             )
+    return comment
+
+@router.get("/comments/{comment_id}", response_model=Optional[CommentOut])
+async def get_comment(
+    comment_id: int,
+    response: Response,
+    repo: CommentsRepository = Depends(),
+    user_data: dict = Depends(authenticator.get_current_account_data),
+) -> CommentOut:
+    comment = repo.get_comment(comment_id)
+    if comment is None:
+        response.status_code = 404
     return comment
