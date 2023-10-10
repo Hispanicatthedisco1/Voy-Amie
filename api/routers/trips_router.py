@@ -48,3 +48,16 @@ async def create_trip(
             detail="Cannot create an trip",
         )
     return trip
+
+
+@router.get("/trips/{trip_id}", response_model=Optional[TripOut])
+def get_trip(
+    trip_id: int,
+    response: Response,
+    repo: TripsRepository = Depends(),
+    user_data: dict = Depends(authenticator.get_current_account_data),
+) -> TripOut:
+    trip = repo.get_trip(trip_id)
+    if trip is None:
+        response.status_code = 404
+    return trip
