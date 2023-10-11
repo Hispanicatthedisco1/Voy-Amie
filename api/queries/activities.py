@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import Union, List
+from typing import Union, List, Optional
 from queries.pool import pool 
 
 
@@ -88,3 +88,41 @@ class ActivitiesRespository:
         except Exception as e:
             print(e)
             return {"message": "Unable to get an activities list"}
+
+
+    def get_one_activity(self, activity_id: int) -> Optional[ActivitiesOut]:
+        try: 
+            with pool.connection() as conn:
+                with conn.cursor() as db:
+                    result = db.execute(
+                        """
+                        SELECT activity_id,
+                            trip, 
+                            title, 
+                            url, 
+                            date, 
+                            time, 
+                            status, 
+                            vote
+                        FROM activities
+                        WHERE activity_id=%s
+                        """,
+                        [activity_id],
+                    )
+                    record = result.fetchone()
+                    if record is None:
+                        return None
+                    return ActivitiesOut(
+                        activity_id=record[0],
+                        trip=record[1],
+                        title=record[2],
+                        url=record[3],
+                        date=record[4],
+                        time=record[5],
+                        status=record[6],
+                        vote=record[7],
+                    )
+        except Exception as e:
+            print(e)
+            return{"message": "Unable to get individual activity"}
+            
