@@ -80,3 +80,12 @@ def get_all(
 ):
     planner = user_data["username"]
     return repo.get_all_trips(planner=planner)
+
+
+@router.delete("/trips/{trip_id}", response_model=bool)
+def delete_trip(
+    trip_id: int,
+    repo: TripsRepository = Depends(),
+    user_data: dict = Depends(authenticator.get_current_account_data),
+) -> bool:
+    return repo.delete_trip(trip_id)
