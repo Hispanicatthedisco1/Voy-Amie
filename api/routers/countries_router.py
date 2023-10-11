@@ -57,3 +57,14 @@ async def get_all_countries(
     repo: CountryRepository = Depends(),
 ):
     return repo.get_all_countries()
+
+
+@router.put("/countries/{countries_id}", response_model=Union[CountriesOut, Error])
+def update_country(
+    country_id: int,
+    country: CountriesIn,
+    repo: CountryRepository = Depends(),
+    country_data: dict = Depends(authenticator.get_current_account_data),
+) -> Union[CountriesOut, Error]:
+    # planner = country_data["country_name"]
+    return repo.update_country(country_id, country,)
