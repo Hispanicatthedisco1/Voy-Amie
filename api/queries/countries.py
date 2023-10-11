@@ -77,3 +77,29 @@ class CountryRepository:
         except Exception as e:
             print(e)
             return {"message": "Unable to get al countries list"}
+
+
+    def update_country(
+        self, country_id: int, countries: CountriesIn
+    ) -> Union[CountriesOut, Error]:
+        try:
+            with pool.connection() as conn:
+                with conn.cursor() as db:
+                    db.execute(
+                        """
+                        UPDATE countries
+                        SET country_name=%s
+                        WHERE country_id=%s
+                        """,
+                        [
+                            countries.country_name,
+                            country_id,
+                        ],
+                    )
+                    old_data = countries.dict()
+                    return CountriesOut(
+                        country_id=country_id, **old_data
+                    )
+        except Exception as e:
+            print(e)
+            return {"message": "Unable to update country."}

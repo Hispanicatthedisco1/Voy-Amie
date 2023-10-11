@@ -17,7 +17,7 @@ from queries.activities import (
     Error,
 )
 
-from typing import Union, List
+from typing import Union, List, Optional
 
 
 router = APIRouter()
@@ -37,3 +37,16 @@ async def get_all_activities(
     repo: ActivitiesRespository = Depends(),
 ): 
     return repo.get_all_activities()
+
+
+@router.get("/activities/{activity_id}", response_model=Optional[ActivitiesOut])
+def get_one_activity(
+    activity_id: int,
+    response: Response,
+    activity_data: dict = Depends(authenticator.get_current_account_data),
+    repo: ActivitiesRespository = Depends(),
+) -> ActivitiesOut:
+    activity = repo.get_one_activity(activity_id)
+    if activity is None:
+        response.status_code = 404
+    return activity
