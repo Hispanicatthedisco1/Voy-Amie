@@ -14,9 +14,10 @@ from queries.comments import (
     CommentIn,
     CommentOut,
     CommentsRepository,
+    Error,
     CreateCommentError,
     )
-from typing import Optional
+from typing import Optional, Union, List
 
 
 class CommentToken(Token):
@@ -59,3 +60,11 @@ async def get_comment(
     if comment is None:
         response.status_code = 404
     return comment
+
+@router.get("/comments", response_model=Union[List[CommentOut], Error])
+def get_all_comments(
+    trip: int,
+    repo: CommentsRepository = Depends(),
+    user_data: dict = Depends(authenticator.get_current_account_data),
+):
+    return repo.get_comments(trip)
