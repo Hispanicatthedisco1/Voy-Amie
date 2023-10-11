@@ -71,3 +71,12 @@ def update_trip(
 ) -> Union[TripOut, Error]:
     planner = user_data["username"]
     return repo.update_trip(trip_id, trip, planner=planner)
+
+
+@router.get("/trips", response_model=Union[List[TripOut], Error])
+def get_all(
+    repo: TripsRepository = Depends(),
+    user_data: dict = Depends(authenticator.get_current_account_data),
+):
+    planner = user_data["username"]
+    return repo.get_all_trips(planner=planner)
