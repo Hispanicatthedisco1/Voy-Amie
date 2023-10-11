@@ -118,3 +118,32 @@ class TripsRepository:
         except Exception as e:
             print(e)
             return {"message": "Could not update trip."}
+
+    def get_all_trips(self, planner) -> Union[Error, List[TripOut]]:
+        try:
+            with pool.connection() as conn:
+                with conn.cursor() as db:
+                    result = db.execute(
+                        """
+                        SELECT trip_id, planner, trip_name, city, country, start_date, end_date
+                        FROM trips
+                        WHERE planner=%s
+                        """,
+                        [planner],
+                    )
+                    trip_list = []
+                    for record in result:
+                        trip = TripOut(
+                            trip_id=record[0],
+                            planner=record[1],
+                            trip_name=record[2],
+                            city=record[3],
+                            country=record[4],
+                            start_date=record[5],
+                            end_date=record[6],
+                        )
+                        trip_list.append(trip)
+                    return trip_list
+        except Exception as e:
+            print(e)
+            return {"message": "Could not get all trips"}
