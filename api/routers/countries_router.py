@@ -5,6 +5,8 @@ from fastapi import (
     Request,
 )
 
+from jwtdown_fastapi.authentication import Token
+from authenticator import authenticator
 
 from pydantic import BaseModel
 
@@ -12,9 +14,10 @@ from queries.countries import (
     CountriesIn,
     CountriesOut,
     CountryRepository,
+    Error,
 
 )
-from typing import Optional
+from typing import Union, List
 
 
 class CountryForm(BaseModel):
@@ -37,7 +40,7 @@ async def create_country(
 ) -> CountriesOut:
     return repo.create_country(country)
 
-@router.get("/countries/")
+@router.get("/countries/{country_name}")
 async def get_country_by_name(
     country_name: str,
     response: Response,
@@ -47,3 +50,10 @@ async def get_country_by_name(
     if country is None:
         response.status_code = 404
     return country
+
+@router.get("/countries/", response_model=Union[List[CountriesOut], Error])
+async def get_all_countries(
+    activity_data: dict = Depends(authenticator.get_current_account_data),
+    repo: CountryRepository = Depends(),
+):
+    return repo.get_all_countries()

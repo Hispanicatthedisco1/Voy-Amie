@@ -1,6 +1,9 @@
 from pydantic import BaseModel
 from queries.pool import pool
+from typing import Union, List
 
+class Error(BaseModel):
+    message: str
 
 class CountriesIn(BaseModel):
     country_name: str
@@ -50,3 +53,27 @@ class CountryRepository:
         except Exception as e:
             print(e)
             return {"message": "Could not find country."}
+
+
+    def get_all_countries(self) -> Union[Error, List[CountriesOut]]:
+        try:
+            with pool.connection() as conn:
+                with conn.cursor() as db:
+                    result = """
+                        SELECT country_id,
+                            country_name
+                        FROM countries
+                        ORDER BY country_id
+                    """
+                    db.execute(result)
+                    records = db.fetchall()
+                    return [
+                        CountriesOut(
+                            country_id=record[0],
+                            country_name=record[1],
+                        )
+                        for record in records
+                    ]
+        except Exception as e:
+            print(e)
+            return {"message": "Unable to get al countries list"}
