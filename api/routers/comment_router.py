@@ -78,3 +78,10 @@ async def update_comment(
 ) -> Union[CommentOut, Error]:
     commenter = user_data["username"]
     return repo.update_comment(comment_id, comment)
+
+@router.delete("/comments/{comment_id}", response_model=bool)
+def delete_comment(
+    comment_id: int,
+    repo: CommentsRepository = Depends(),
+) -> bool:
+    return repo.delete_comment(comment_id)

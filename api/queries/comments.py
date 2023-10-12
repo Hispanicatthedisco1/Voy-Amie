@@ -126,3 +126,19 @@ class CommentsRepository:
         except Exception as e:
             print(e)
             return {"message": "Could not update comment."}
+
+    def delete_comment(self, comment_id: int) -> bool:
+        try:
+            with pool.connection() as conn:
+                with conn.cursor() as db:
+                    db.execute(
+                        """
+                        DELETE FROM comments
+                        WHERE comment_id=%s
+                        """,
+                        [comment_id]
+                    )
+                    return True
+        except Exception as e:
+            print(e)
+            return False
