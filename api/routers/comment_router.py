@@ -68,3 +68,13 @@ def get_all_comments(
     user_data: dict = Depends(authenticator.get_current_account_data),
 ):
     return repo.get_comments(trip)
+
+@router.put("/comments/{comment_id}", response_model=Optional[CommentOut])
+async def update_comment(
+    comment_id: int,
+    trip: int,
+    comment: CommentIn,
+    repo: CommentsRepository = Depends(),
+    user_data: dict = Depends(authenticator.get_current_account_data),
+) -> Union[CommentOut, Error]:
+    return repo.update_comment(trip, comment_id)
