@@ -103,3 +103,20 @@ class CountryRepository:
         except Exception as e:
             print(e)
             return {"message": "Unable to update country."}
+
+
+    def delete_country(self, country_id: int) -> bool:
+        try:
+            with pool.connection() as conn:
+                with conn.cursor() as db:
+                    db.execute(
+                        """
+                        DELETE FROM countries
+                        WHERE country_id=%s
+                        """,
+                        [country_id],
+                    )
+                    return True
+        except Exception as e:
+            print(e)
+            return False

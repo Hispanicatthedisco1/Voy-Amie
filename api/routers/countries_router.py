@@ -68,3 +68,13 @@ def update_country(
 ) -> Union[CountriesOut, Error]:
     # planner = country_data["country_name"]
     return repo.update_country(country_id, country,)
+
+
+
+@router.delete("/countries/{country_id}", response_model=bool)
+def delete_country(
+    country_id: int,
+    repo: CountryRepository = Depends(),
+    user_data: dict = Depends(authenticator.get_current_account_data),
+) -> bool:
+    return repo.delete_country(country_id)
