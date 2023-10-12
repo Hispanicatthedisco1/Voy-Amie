@@ -69,12 +69,12 @@ def get_all_comments(
 ):
     return repo.get_comments(trip)
 
-@router.put("/comments/{comment_id}", response_model=Optional[CommentOut])
+@router.put("/comments/{comment_id}", response_model=Union[CommentOut, Error])
 async def update_comment(
     comment_id: int,
-    trip: int,
-    comment: CommentIn,
+    comment: str,
     repo: CommentsRepository = Depends(),
     user_data: dict = Depends(authenticator.get_current_account_data),
 ) -> Union[CommentOut, Error]:
-    return repo.update_comment(trip, comment_id)
+    commenter = user_data["username"]
+    return repo.update_comment(comment_id, comment)
