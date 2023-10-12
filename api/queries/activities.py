@@ -126,3 +126,37 @@ class ActivitiesRespository:
             print(e)
             return{"message": "Unable to get individual activity"}
             
+
+    def update_activity(self, activity_id: int, activity: ActivitiesIn) -> Union[ActivitiesOut, Error]:
+        try: 
+            with pool.connection() as conn:
+                with conn.cursor() as db:
+                    db.execute(
+                        """
+                        UPDATE activities
+                        SET trip = %s,
+                            title = %s,
+                            url = %s,
+                            date = %s,
+                            status = %s,
+                            vote = %s
+                        WHERE activity_id = %s
+                        """,
+                        [
+                            activity.trip,
+                            activity.title,
+                            activity.url,
+                            activity.date,
+                            activity.status,
+                            activity.vote,
+                            activity_id,
+                        ],
+                    )
+                    old_data = activity.dict()
+                    return ActivitiesOut(
+                        activity_id=activity_id, activity=activity, **old_data
+                    )
+        except Exception as e:
+            print(e)
+            return {"message": "Could not update activity"} 
+

@@ -50,3 +50,14 @@ def get_one_activity(
     if activity is None:
         response.status_code = 404
     return activity
+
+
+@router.put("/activities/{activity_id}", response_model=Union[ActivitiesOut, Error])
+def update_activity(
+    activity_id: int,
+    activity: ActivitiesIn,
+    activity_data: dict = Depends(authenticator.get_current_account_data),
+    repo: ActivitiesRespository = Depends(),
+) -> Union[ActivitiesOut, Error]:
+    return repo.update_activity(activity_id, activity)
+
