@@ -71,7 +71,7 @@ steps = [
         """
         CREATE TABLE comments (
             comment_id SERIAL PRIMARY KEY NOT NULL,
-            trip INT REFERENCES trips(trip_id) NOT NULL,
+            trip INT REFERENCES trips(trip_id) ON DELETE CASCADE  NOT NULL,
             commenter VARCHAR(20) REFERENCES users(username) NOT NULL,
             comment TEXT NOT NULL
         );
