@@ -61,3 +61,11 @@ def update_activity(
 ) -> Union[ActivitiesOut, Error]:
     return repo.update_activity(activity_id, activity)
 
+
+@router.delete("/activities/{activities_id}", response_model=bool)
+def delete_activity(
+    activity_id: int,
+    activity_data: dict = Depends(authenticator.get_current_account_data),
+    repo: ActivitiesRespository = Depends(),
+) -> bool:
+    return repo.delete_activity(activity_id)

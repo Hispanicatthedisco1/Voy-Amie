@@ -81,4 +81,18 @@ steps = [
         DROP TABLE comments;
         """,
     ],
+    [
+        # "Up" SQL statement
+        """
+        CREATE TABLE friends (
+            friendship_id SERIAL PRIMARY KEY NOT NULL,
+            user1_id INT REFERENCES users(user_id) NOT NULL,
+            user2_id INT REFERENCES users(user_id) NOT NULL
+        );
+        """,
+        # "Down" SQL statement
+        """
+        DROP TABLE friends;
+        """,
+    ],
 ]

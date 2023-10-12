@@ -160,3 +160,19 @@ class ActivitiesRespository:
             print(e)
             return {"message": "Could not update activity"} 
 
+
+    def delete_activity(self, activity_id: int) -> bool:
+        try:
+            with pool.connection() as conn:
+                with conn.cursor() as db:
+                    db.execute(
+                        """
+                        DELETE FROM activities
+                        WHERE activity_id = %s
+                        """,
+                        [activity_id],
+                    )
+                    return True
+        except Exception as e:
+            print(e)
+            return False 
