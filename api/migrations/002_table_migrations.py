@@ -95,4 +95,18 @@ steps = [
         DROP TABLE friends;
         """,
     ],
+    [
+        # "Up" SQL statement
+        """
+        CREATE TABLE trip_participants (
+            participant_id SERIAL PRIMARY KEY NOT NULL,
+            user_id INT REFERENCES users(user_id) NOT NULL,
+            trip_id INT REFERENCES trips(trip_id) NOT NULL
+        );
+        """,
+        # "Down" SQL statement
+        """
+        DROP TABLE trip_participants;
+        """,
+    ],
 ]
