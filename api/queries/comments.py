@@ -98,3 +98,26 @@ class CommentsRepository:
         except Exception as e:
             print(e)
             return {"message": "Could not get all comments!"}
+
+    def update_comment(self, trip, comment_id: int, comment: CommentIn
+    ) -> Union[CommentOut, Error]:
+        try:
+            with pool.connection() as conn:
+                with conn.cursor() as db:
+                    db.execute(
+                        """
+                        UPDATE comments
+                        SET comment=%s
+                        WHERE comment_id=%s
+                        """,
+                        [
+                            comment.comment
+                        ],
+                    )
+                    old_data = comment.dict()
+                    return CommentOut(
+                        comment_id=comment_id, trip=trip, **old_data
+                    )
+        except Exception as e:
+            print(e)
+            return {"message": "Could not update comment."}
