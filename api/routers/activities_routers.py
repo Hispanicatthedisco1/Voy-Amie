@@ -1,10 +1,7 @@
 from fastapi import (
     Depends,
-    HTTPException,
-    status,
     Response,
     APIRouter,
-    Request,
 )
 from jwtdown_fastapi.authentication import Token
 from authenticator import authenticator
@@ -27,7 +24,8 @@ router = APIRouter()
 def create_activity(
     activity: ActivitiesIn,
     repo: ActivitiesRespository = Depends(),
-) -> Union[Error, ActivitiesOut]:
+    activity_data: dict = Depends(authenticator.get_current_account_data),
+) -> Union[Error, ActivitiesOut]: 
     return repo.create_activity(activity)
 
 
