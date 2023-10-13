@@ -8,6 +8,7 @@ from routers import (
     comment_router,
     countries_router,
     friends_router,
+    participants_router,
 )
 from authenticator import authenticator
 
@@ -19,6 +20,7 @@ app.include_router(trips_router.router)
 app.include_router(activities_routers.router)
 app.include_router(countries_router.router)
 app.include_router(friends_router.router)
+app.include_router(participants_router.router)
 
 
 app.add_middleware(
