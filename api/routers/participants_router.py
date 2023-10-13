@@ -33,7 +33,7 @@ async def create_participants(
     response: Response,
     data: dict = Depends(authenticator.get_current_account_data),
     repo: ParticipantRepository = Depends(),
-): 
+):
     try:
         participant = repo.create_participants(info)
     except CreateParticipantError:
@@ -42,3 +42,12 @@ async def create_participants(
             detail="Could not create a participant",
         )
     return participant
+
+
+@router.delete("/participants/{participant_id}", response_model=bool)
+def delete_participant(
+    participant_id: int,
+    repo: ParticipantRepository = Depends(),
+    participant_data: dict = Depends(authenticator.get_current_account_data),
+) -> bool:
+    return repo.delete_participant(participant_id)

@@ -34,7 +34,7 @@ class ParticipantRepository:
                     RETURNING participant_id;
                     """,
                     [
-                        participant.user_id, 
+                        participant.user_id,
                         participant.trip_id,
                     ]
                 )
@@ -43,3 +43,20 @@ class ParticipantRepository:
                 return ParticipantsOut(
                     participant_id=participant_id, **old_data
                 )
+
+
+    def delete_participant(self, participant_id: int) -> bool:
+        try:
+            with pool.connection() as conn:
+                with conn.cursor() as db:
+                    db.execute(
+                        """
+                        DELETE FROM trip_participants
+                        WHERE participant_id=%s
+                        """,
+                        [participant_id],
+                    )
+                    return True
+        except Exception as e:
+            print(e)
+            return False
