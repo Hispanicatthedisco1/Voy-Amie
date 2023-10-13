@@ -48,6 +48,22 @@ class FriendsRepository:
                     friendship_id=friendship_id, user1_id=user1_id, **old_data
                 )
 
+    def delete_friend(self, friendship_id: int) -> bool:
+        try:
+            with pool.connection() as conn:
+                with conn.cursor() as db:
+                    db.execute(
+                        """
+                        DELETE FROM friends
+                        WHERE friendship_id=%s
+                        """,
+                        [friendship_id],
+                    )
+                    return True
+        except Exception as e:
+            print(e)
+            return False
+        
     def get_all_friends(self, user_id) -> Union[Error, List[FriendsOut]]:
         try:
             with pool.connection() as conn:
