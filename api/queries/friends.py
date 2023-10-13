@@ -47,3 +47,28 @@ class FriendsRepository:
                 return FriendsOut(
                     friendship_id=friendship_id, user1_id=user1_id, **old_data
                 )
+
+    def get_all_friends(self, user_id) -> Union[Error, List[FriendsOut]]:
+        try:
+            with pool.connection() as conn:
+                with conn.cursor() as db:
+                    result = db.execute(
+                        """
+                        SELECT friendship_id, user1_id, user2_id
+                        FROM friends
+                        WHERE user1_id=%s OR user2_id=%s
+                        """,
+                        [user_id, user_id],
+                    )
+                    friend_list = []
+                    for record in result:
+                        friend = FriendsOut(
+                            friendship_id=record[0],
+                            user1_id=record[1],
+                            user2_id=record[2],
+                        )
+                        friend_list.append(friend)
+                    return friend_list
+        except Exception as e:
+            print(e)
+            return {"message": "Could not get all friends"}
