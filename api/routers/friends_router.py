@@ -44,3 +44,13 @@ async def create_friendship(
             detail="Could not create a friendship",
         )
     return friend
+
+
+@router.get("/friends", response_model=Union[List[FriendsOut], Error])
+def get_all_friends(
+    repo: FriendsRepository = Depends(),
+    user_data: dict = Depends(authenticator.get_current_account_data),
+):
+    print(user_data)
+    user_id = user_data["user_id"]
+    return repo.get_all_friends(user_id=user_id)
