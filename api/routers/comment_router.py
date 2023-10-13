@@ -83,5 +83,6 @@ async def update_comment(
 def delete_comment(
     comment_id: int,
     repo: CommentsRepository = Depends(),
+    user_data: dict = Depends(authenticator.get_current_account_data),
 ) -> bool:
     return repo.delete_comment(comment_id)
