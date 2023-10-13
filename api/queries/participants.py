@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import Union
+from typing import Union, List
 from queries.pool import pool
 
 
@@ -60,3 +60,28 @@ class ParticipantRepository:
         except Exception as e:
             print(e)
             return False
+
+
+    def get_all_participants(self) -> Union[Error, List[ParticipantsOut]]:
+        try: 
+            with pool.connection() as conn:
+                with conn.cursor() as db:
+                    result = """
+                        SELECT participant_id, user_id, trip_id
+                        FROM trip_participants
+                        ORDER BY participant_id
+                        """
+                    db.execute(result)
+                    records = db.fetchall()
+                    
+                    return [ParticipantsOut(
+                            participant_id=record[0],
+                            user_id=record[1],
+                            trip_id=record[2],
+                        )
+                        for record in records
+                    ]    
+                   
+        except Exception as e:
+            print(e)
+            return {"message": "Could not get all trip participants"}

@@ -51,3 +51,11 @@ def delete_participant(
     participant_data: dict = Depends(authenticator.get_current_account_data),
 ) -> bool:
     return repo.delete_participant(participant_id)
+
+
+@router.get("/participants", response_model=Union[List[ParticipantsOut], Error])
+def get_all_participants(
+    repo: ParticipantRepository = Depends(),
+    participant_data: dict = Depends(authenticator.get_current_account_data),
+): 
+    return repo.get_all_participants()
