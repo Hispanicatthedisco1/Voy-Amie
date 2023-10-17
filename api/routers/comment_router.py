@@ -9,7 +9,6 @@ from fastapi import (
 from jwtdown_fastapi.authentication import Token
 from authenticator import authenticator
 from pydantic import BaseModel
-from queries.users import UsersOut
 from queries.comments import (
     CommentIn,
     CommentOut,
@@ -49,6 +48,7 @@ async def create_comment(
             )
     return comment
 
+
 @router.get("/comments/{comment_id}", response_model=Optional[CommentOut])
 async def get_comment(
     comment_id: int,
@@ -61,6 +61,7 @@ async def get_comment(
         response.status_code = 404
     return comment
 
+
 @router.get("/comments", response_model=Union[List[CommentOut], Error])
 def get_all_comments(
     trip: int,
@@ -69,6 +70,7 @@ def get_all_comments(
 ):
     return repo.get_comments(trip)
 
+
 @router.put("/comments/{comment_id}", response_model=Union[CommentOut, Error])
 async def update_comment(
     comment_id: int,
@@ -76,8 +78,9 @@ async def update_comment(
     repo: CommentsRepository = Depends(),
     user_data: dict = Depends(authenticator.get_current_account_data),
 ) -> Union[CommentOut, Error]:
-    commenter = user_data["username"]
+    comment = user_data["username"]
     return repo.update_comment(comment_id, comment)
+
 
 @router.delete("/comments/{comment_id}", response_model=bool)
 def delete_comment(

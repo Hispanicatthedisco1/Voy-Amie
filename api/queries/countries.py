@@ -2,18 +2,22 @@ from pydantic import BaseModel
 from queries.pool import pool
 from typing import Union, List
 
+
 class Error(BaseModel):
     message: str
 
+
 class CountriesIn(BaseModel):
     country_name: str
+
 
 class CountriesOut(BaseModel):
     country_id: int
     country_name: str
 
+
 class CountryRepository:
-    def create_country(self, country:CountriesIn) -> CountriesOut:
+    def create_country(self, country: CountriesIn) -> CountriesOut:
         with pool.connection() as conn:
             with conn.cursor() as db:
                 result = db.execute(
@@ -54,7 +58,6 @@ class CountryRepository:
             print(e)
             return {"message": "Could not find country."}
 
-
     def get_all_countries(self) -> Union[Error, List[CountriesOut]]:
         try:
             with pool.connection() as conn:
@@ -77,7 +80,6 @@ class CountryRepository:
         except Exception as e:
             print(e)
             return {"message": "Unable to get al countries list"}
-
 
     def update_country(
         self, country_id: int, countries: CountriesIn
@@ -103,7 +105,6 @@ class CountryRepository:
         except Exception as e:
             print(e)
             return {"message": "Unable to update country."}
-
 
     def delete_country(self, country_id: int) -> bool:
         try:

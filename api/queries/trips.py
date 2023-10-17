@@ -40,7 +40,12 @@ class TripsRepository:
                 result = db.execute(
                     """
                     INSERT INTO trips
-                        (planner, trip_name, city, country, start_date, end_date)
+                        (planner,
+                        trip_name,
+                        city,
+                        country,
+                        start_date,
+                        end_date)
                     VALUES
                        (%s, %s, %s, %s, %s, %s)
                     RETURNING trip_id;
@@ -64,7 +69,13 @@ class TripsRepository:
                 with conn.cursor() as db:
                     result = db.execute(
                         """
-                        SELECT trip_id, planner, trip_name, city, country, start_date, end_date
+                        SELECT trip_id,
+                            planner,
+                            trip_name,
+                            city,
+                            country,
+                            start_date,
+                            end_date
                         FROM trips
                         WHERE trip_id=%s
                         """,
@@ -125,7 +136,13 @@ class TripsRepository:
                 with conn.cursor() as db:
                     result = db.execute(
                         """
-                        SELECT trip_id, planner, trip_name, city, country, start_date, end_date
+                        SELECT trip_id,
+                        planner,
+                        trip_name,
+                        city,
+                        country,
+                        start_date,
+                        end_date
                         FROM trips
                         WHERE planner=%s
                         """,

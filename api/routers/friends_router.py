@@ -1,15 +1,14 @@
 from fastapi import (
     Depends,
     HTTPException,
-    status,
     Response,
     APIRouter,
     Request,
 )
 from authenticator import authenticator
-from jwtdown_fastapi.authentication import Token
+
 from pydantic import BaseModel
-from typing import Optional, Union, List
+from typing import Union, List
 from queries.friends import (
     FriendsIn,
     FriendsOut,
@@ -45,6 +44,7 @@ async def create_friendship(
         )
     return friend
 
+
 @router.delete("/friends/{friendship_id}", response_model=bool)
 def delete_friend(
     friendship_id: int,
@@ -52,6 +52,7 @@ def delete_friend(
     user_data: dict = Depends(authenticator.get_current_account_data),
 ) -> bool:
     return repo.delete_friend(friendship_id)
+
 
 @router.get("/friends", response_model=Union[List[FriendsOut], Error])
 def get_all_friends(

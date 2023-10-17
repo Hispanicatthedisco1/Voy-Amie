@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from typing import Union, List, Optional
-from queries.pool import pool 
+from queries.pool import pool
 
 
 class ActivitiesIn(BaseModel):
@@ -11,6 +11,7 @@ class ActivitiesIn(BaseModel):
     time: str
     status: str
     vote: int
+
 
 class ActivitiesOut(BaseModel):
     activity_id: int
@@ -28,7 +29,9 @@ class Error(BaseModel):
 
 
 class ActivitiesRespository:
-    def create_activity(self, activity:ActivitiesIn) -> Union[ActivitiesOut, Error]:
+    def create_activity(
+        self, activity: ActivitiesIn
+    ) -> Union[ActivitiesOut, Error]:
         with pool.connection() as conn:
             with conn.cursor() as db:
                 result = db.execute(
@@ -52,7 +55,6 @@ class ActivitiesRespository:
                 activity_id = result.fetchone()[0]
                 old_data = activity.dict()
                 return ActivitiesOut(activity_id=activity_id, **old_data)
-            
 
     def get_all_activities(self) -> Union[Error, List[ActivitiesOut]]:
         try:
@@ -89,20 +91,19 @@ class ActivitiesRespository:
             print(e)
             return {"message": "Unable to get an activities list"}
 
-
     def get_one_activity(self, activity_id: int) -> Optional[ActivitiesOut]:
-        try: 
+        try:
             with pool.connection() as conn:
                 with conn.cursor() as db:
                     result = db.execute(
                         """
                         SELECT activity_id,
-                            trip, 
-                            title, 
-                            url, 
-                            date, 
-                            time, 
-                            status, 
+                            trip,
+                            title,
+                            url,
+                            date,
+                            time,
+                            status,
                             vote
                         FROM activities
                         WHERE activity_id=%s
@@ -124,11 +125,12 @@ class ActivitiesRespository:
                     )
         except Exception as e:
             print(e)
-            return{"message": "Unable to get individual activity"}
-            
+            return {"message": "Unable to get individual activity"}
 
-    def update_activity(self, activity_id: int, activity: ActivitiesIn) -> Union[ActivitiesOut, Error]:
-        try: 
+    def update_activity(
+        self, activity_id: int, activity: ActivitiesIn
+    ) -> Union[ActivitiesOut, Error]:
+        try:
             with pool.connection() as conn:
                 with conn.cursor() as db:
                     db.execute(
@@ -158,8 +160,7 @@ class ActivitiesRespository:
                     )
         except Exception as e:
             print(e)
-            return {"message": "Could not update activity"} 
-
+            return {"message": "Could not update activity"}
 
     def delete_activity(self, activity_id: int) -> bool:
         try:
@@ -175,4 +176,4 @@ class ActivitiesRespository:
                     return True
         except Exception as e:
             print(e)
-            return False 
+            return False
