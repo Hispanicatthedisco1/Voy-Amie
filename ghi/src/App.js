@@ -6,6 +6,7 @@ import "./App.css";
 import { AuthProvider } from "@galvanize-inc/jwtdown-for-react";
 import SignUpForm from "./SignUpForm.js";
 import LoginForm from "./LogInForm.js";
+import CreateTrip from "./CreateTripForm.js";
 
 function App() {
   const domain = /https:\/\/[^/]+/;
@@ -19,6 +20,7 @@ function App() {
           <Routes>
             <Route exact path="/users" element= {<SignUpForm />}></Route>
             <Route exact path="/login" element={<LoginForm />}></Route>
+            <Route exact path="/trips" element={ <CreateTrip /> }></Route>
           </Routes>
         </AuthProvider>
       </BrowserRouter>
