@@ -17,12 +17,15 @@ class ParticipantsOut(BaseModel):
 class Error(BaseModel):
     message: str
 
+
 class CreateParticipantError(ValueError):
     pass
 
 
 class ParticipantRepository:
-    def create_participants(self, participant: ParticipantsIn) -> Union[ParticipantsOut, Error]:
+    def create_participants(
+        self, participant: ParticipantsIn
+    ) -> Union[ParticipantsOut, Error]:
         with pool.connection() as conn:
             with conn.cursor() as db:
                 result = db. execute(
@@ -44,7 +47,6 @@ class ParticipantRepository:
                     participant_id=participant_id, **old_data
                 )
 
-
     def delete_participant(self, participant_id: int) -> bool:
         try:
             with pool.connection() as conn:
@@ -61,9 +63,8 @@ class ParticipantRepository:
             print(e)
             return False
 
-
     def get_all_participants(self) -> Union[Error, List[ParticipantsOut]]:
-        try: 
+        try:
             with pool.connection() as conn:
                 with conn.cursor() as db:
                     result = """
@@ -73,15 +74,15 @@ class ParticipantRepository:
                         """
                     db.execute(result)
                     records = db.fetchall()
-                    
+
                     return [ParticipantsOut(
                             participant_id=record[0],
                             user_id=record[1],
                             trip_id=record[2],
-                        )
-                        for record in records
-                    ]    
-                   
+                            )
+                            for record in records
+                            ]
+
         except Exception as e:
             print(e)
             return {"message": "Could not get all trip participants"}

@@ -3,13 +3,13 @@ from fastapi import (
     Response,
     APIRouter,
 )
-from jwtdown_fastapi.authentication import Token
+
 from authenticator import authenticator
 
 
 from queries.activities import (
-    ActivitiesIn, 
-    ActivitiesOut, 
+    ActivitiesIn,
+    ActivitiesOut,
     ActivitiesRespository,
     Error,
 )
@@ -25,7 +25,7 @@ def create_activity(
     activity: ActivitiesIn,
     repo: ActivitiesRespository = Depends(),
     activity_data: dict = Depends(authenticator.get_current_account_data),
-) -> Union[Error, ActivitiesOut]: 
+) -> Union[Error, ActivitiesOut]:
     return repo.create_activity(activity)
 
 
@@ -33,11 +33,12 @@ def create_activity(
 async def get_all_activities(
     activity_data: dict = Depends(authenticator.get_current_account_data),
     repo: ActivitiesRespository = Depends(),
-): 
+):
     return repo.get_all_activities()
 
 
-@router.get("/activities/{activity_id}", response_model=Optional[ActivitiesOut])
+@router.get(
+        "/activities/{activity_id}", response_model=Optional[ActivitiesOut])
 def get_one_activity(
     activity_id: int,
     response: Response,
@@ -50,7 +51,9 @@ def get_one_activity(
     return activity
 
 
-@router.put("/activities/{activity_id}", response_model=Union[ActivitiesOut, Error])
+@router.put(
+        "/activities/{activity_id}",
+        response_model=Union[ActivitiesOut, Error])
 def update_activity(
     activity_id: int,
     activity: ActivitiesIn,

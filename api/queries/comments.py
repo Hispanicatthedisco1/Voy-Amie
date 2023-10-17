@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import Optional, Union, List
+from typing import Union, List
 from queries.pool import pool
 
 
@@ -21,6 +21,7 @@ class Error(BaseModel):
 
 class DuplicateCommentError(ValueError):
     pass
+
 
 class CreateCommentError(ValueError):
     pass
@@ -46,7 +47,8 @@ class CommentsRepository:
                 )
                 comment_id = result.fetchone()[0]
                 old_data = comment.dict()
-                return CommentOut(comment_id=comment_id, commenter=commenter, **old_data)
+                return CommentOut(
+                    comment_id=comment_id, commenter=commenter, **old_data)
 
     def get_comment(self, comment_id: int) -> CommentOut:
         try:
@@ -99,7 +101,8 @@ class CommentsRepository:
             print(e)
             return {"message": "Could not get all comments!"}
 
-    def update_comment(self, comment_id: int, comment: str
+    def update_comment(
+        self, comment_id: int, comment: str
     ) -> Union[CommentOut, Error]:
         try:
             with pool.connection() as conn:

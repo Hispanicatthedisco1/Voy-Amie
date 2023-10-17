@@ -1,15 +1,14 @@
 from fastapi import (
     Depends,
     HTTPException,
-    status,
     Response,
     APIRouter,
     Request,
 )
 from authenticator import authenticator
-from jwtdown_fastapi.authentication import Token
+
 from pydantic import BaseModel
-from typing import Optional, Union, List
+from typing import Union, List
 from queries.participants import (
     ParticipantsIn,
     ParticipantsOut,
@@ -53,9 +52,10 @@ def delete_participant(
     return repo.delete_participant(participant_id)
 
 
-@router.get("/participants", response_model=Union[List[ParticipantsOut], Error])
+@router.get(
+        "/participants", response_model=Union[List[ParticipantsOut], Error])
 def get_all_participants(
     repo: ParticipantRepository = Depends(),
     participant_data: dict = Depends(authenticator.get_current_account_data),
-): 
+):
     return repo.get_all_participants()

@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import Optional, List, Union
+from typing import List, Union
 from queries.pool import pool
 
 
@@ -63,7 +63,7 @@ class FriendsRepository:
         except Exception as e:
             print(e)
             return False
-        
+
     def get_all_friends(self, user_id) -> Union[Error, List[FriendsOut]]:
         try:
             with pool.connection() as conn:
