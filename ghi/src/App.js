@@ -5,6 +5,7 @@ import ErrorNotification from "./ErrorNotification";
 import "./App.css";
 import { AuthProvider } from "@galvanize-inc/jwtdown-for-react";
 import SignUpForm from "./SignUpForm.js";
+import LoginForm from "./LogInForm.js";
 
 function App() {
   const domain = /https:\/\/[^/]+/;
@@ -16,7 +17,8 @@ function App() {
       <BrowserRouter basename={basename}>
         <AuthProvider baseUrl={process.env.REACT_APP_API_HOST}>
           <Routes>
-            <Route path="/users" element= {<SignUpForm />} />
+            <Route exact path="/users" element= {<SignUpForm />}></Route>
+            <Route exact path="/login" element={<LoginForm />}></Route>
           </Routes>
         </AuthProvider>
       </BrowserRouter>
