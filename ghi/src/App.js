@@ -6,6 +6,7 @@ import LoginForm from "./LogInForm.js";
 import CreateTrip from "./CreateTripForm.js";
 import Nav from "./Nav";
 import UserProfileForm from "./UserProfileForm";
+import TripsFinalized from "./TripFinalPage";
 
 function App() {
   const domain = /https:\/\/[^/]+/;
@@ -15,14 +16,15 @@ function App() {
     <div className="container">
       <BrowserRouter basename={basename}>
         <Nav />
-        <AuthProvider baseUrl={process.env.REACT_APP_API_HOST}>
-          <Routes>
-            <Route exact path="/users" element={<SignUpForm />}></Route>
-            <Route exact path="/login" element={<LoginForm />}></Route>
-            <Route exact path="/trips" element={<CreateTrip />}></Route>
-            <Route exact path="/profile" element={<UserProfileForm />}></Route>
-          </Routes>
-        </AuthProvider>
+          <AuthProvider baseUrl={process.env.REACT_APP_API_HOST}>
+            <Routes>
+              <Route exact path="/users" element= {<SignUpForm />}></Route>
+              <Route exact path="/login" element={<LoginForm />}></Route>
+              <Route exact path="/trips" element={ <CreateTrip /> }></Route>
+              <Route exact path="/profile" element={ <UserProfileForm /> }></Route>
+              <Route exact path="/finalized" element={<TripsFinalized />}></Route>
+            </Routes>
+          </AuthProvider>
       </BrowserRouter>
     </div>
   );
