@@ -58,7 +58,7 @@ async def get_all_countries(
 
 
 @router.put(
-        "/countries/{countries_id}", response_model=Union[CountriesOut, Error])
+        "/countries/{country_id}", response_model=Union[CountriesOut, Error])
 def update_country(
     country_id: int,
     country: CountriesIn,
