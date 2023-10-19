@@ -1,7 +1,4 @@
-import { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-// import Construct from "./Construct.js";
-// import ErrorNotification from "./ErrorNotification";
 import "./App.css";
 import { AuthProvider } from "@galvanize-inc/jwtdown-for-react";
 import SignUpForm from "./SignUpForm.js";
@@ -9,11 +6,11 @@ import LoginForm from "./LogInForm.js";
 import CreateTrip from "./CreateTripForm.js";
 import Nav from "./Nav";
 import UserProfileForm from "./UserProfileForm";
+import TripsFinalized from "./TripFinalPage";
 
 function App() {
   const domain = /https:\/\/[^/]+/;
   const basename = process.env.PUBLIC_URL.replace(domain, "");
-
 
   return (
     <div className="container">
@@ -25,6 +22,7 @@ function App() {
               <Route exact path="/login" element={<LoginForm />}></Route>
               <Route exact path="/trips" element={ <CreateTrip /> }></Route>
               <Route exact path="/profile" element={ <UserProfileForm /> }></Route>
+              <Route exact path="/finalized" element={<TripsFinalized />}></Route>
             </Routes>
           </AuthProvider>
       </BrowserRouter>

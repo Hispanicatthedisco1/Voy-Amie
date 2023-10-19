@@ -1,20 +1,15 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import useToken from "@galvanize-inc/jwtdown-for-react";
 import { useNavigate } from "react-router-dom";
 
-
 const SignUpForm = () => {
-
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
-    const [email, setEmail] = useState("");
-    const [bio, setBio] = useState("");
-    const [profilePic, setProfilePic] = useState("");
-    const { register } = useToken();
-    const navigate = useNavigate();
-
-
-
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [bio, setBio] = useState("");
+  const [profilePic, setProfilePic] = useState("");
+  const { register } = useToken();
+  const navigate = useNavigate();
 
   const handleRegistration = (e) => {
     e.preventDefault();
@@ -25,10 +20,7 @@ const SignUpForm = () => {
       bio: bio,
       profilePic: profilePic,
     };
-    register(
-      accountData,
-      `${process.env.REACT_APP_API_HOST}/users/`
-    );
+    register(accountData, `${process.env.REACT_APP_API_HOST}/users/`);
     e.target.reset();
     navigate("/");
   };
@@ -100,6 +92,6 @@ const SignUpForm = () => {
       </div>
     </div>
   );
-}
+};
 
 export default SignUpForm;
