@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from typing import Optional
 from queries.pool import pool
+from typing import Union, List
 
 
 class UsersIn(BaseModel):
@@ -17,6 +18,12 @@ class UsersOut(BaseModel):
     email: str
     bio: Optional[str]
     profile_pic: Optional[str]
+
+
+class AllUsersOut(BaseModel):
+    user_id: int
+    username: str
+    email: str
 
 
 class Error(BaseModel):
@@ -90,3 +97,26 @@ class UsersRepository:
         except Exception as e:
             print(e)
             return {"message": "Could not get user."}
+
+    def get_all_users(self) -> Union[List[AllUsersOut], Error]:
+        try:
+            with pool.connection() as conn:
+                with conn.cursor() as db:
+                    result = db.execute(
+                        """
+                        SELECT user_id, username, email
+                        FROM users
+                        """,
+                    )
+                    user_list = []
+                    for record in result:
+                        user = UsersOut(
+                            user_id=record[0],
+                            username=record[1],
+                            email=record[2]
+                        )
+                        user_list.append(user)
+                    return user_list
+        except Exception as e:
+            print(e)
+            return {"message": "Could not get all friends"}
