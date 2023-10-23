@@ -29,6 +29,11 @@ function App() {
               path="/trips/:trip_id"
               element={<TripDetail />}
             ></Route>
+            <Route
+              exact
+              path="/finalized/:trip_id"
+              element={<TripsFinalized />}
+            ></Route>
           </Routes>
         </AuthProvider>
       </BrowserRouter>

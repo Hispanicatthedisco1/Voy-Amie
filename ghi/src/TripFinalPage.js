@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
-// import useAuthContext from "@galvanize-inc/jwtdown-for-react";
+import { useParams } from "react-router-dom";
 
 function TripsFinalized() {
     const [activities, setActivities] = useState([]);
     const [query, setQuery] = useState("");
-    // const { token } = useAuthContext();
+    let { trip_id } = useParams();
+    let trip_id_int = parseInt(trip_id)
 
     const filteredDate = activities.filter(activity => activity.date.includes(query))
 
@@ -26,10 +27,6 @@ function TripsFinalized() {
         getActivitiesData();
     }, []);
 
-    // const handleDateChange = (e) => {
-    //     const value = e.target.value
-    //     setSelectedDate(value);
-
     return (
         <>
             <h1>Trip Itinerary</h1>
@@ -48,6 +45,7 @@ function TripsFinalized() {
                     </thead>
                     <tbody>
                             {filteredDate.map((filteredDate) => {
+                                if (trip_id_int === filteredDate.trip && filteredDate.status === "finalized") {
                                 return (
                                     <tr key={filteredDate.activity_id}>
                                         <td>{filteredDate.activity_id}</td>
@@ -58,6 +56,9 @@ function TripsFinalized() {
                                         <td>{filteredDate.vote}</td>
                                     </tr>
                                 );
+                                } else {
+                                    return null
+                                }
                             })}
                             return null;
                     </tbody>
