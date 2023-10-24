@@ -4,7 +4,7 @@ from fastapi import (
     Request,
     Response,
     HTTPException,
-    status
+    status,
 )
 from authenticator import authenticator
 from jwtdown_fastapi.authentication import Token
@@ -15,7 +15,7 @@ from queries.votes import (
     VotesRepository,
     Error,
     VoteIn,
-    CreateVoteError
+    CreateVoteError,
 )
 
 
@@ -53,5 +53,14 @@ async def create_vote(
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Cannot create a vote.",
-            )
+        )
     return vote
+
+
+@router.delete("/votes/{vote_id}", response_model=bool)
+def delete_vote(
+    vote_id: int,
+    repo: VotesRepository = Depends(),
+    user_data: dict = Depends(authenticator.get_current_account_data),
+) -> bool:
+    return repo.delete_vote(vote_id)
