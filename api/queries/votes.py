@@ -65,5 +65,20 @@ class VotesRepository:
                 )
                 vote_id = result.fetchone()[0]
                 old_data = vote.dict()
-                return VoteOut(
-                    vote_id=vote_id, voter_id=voter_id, **old_data)
+                return VoteOut(vote_id=vote_id, voter_id=voter_id, **old_data)
+
+    def delete_vote(self, vote_id: int) -> bool:
+        try:
+            with pool.connection() as conn:
+                with conn.cursor() as db:
+                    db.execute(
+                        """
+                        DELETE FROM votes
+                        WHERE vote_id=%s
+                        """,
+                        [vote_id],
+                    )
+                    return True
+        except Exception as e:
+            print(e)
+            return False
