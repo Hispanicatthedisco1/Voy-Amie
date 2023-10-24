@@ -9,6 +9,7 @@ from routers import (
     countries_router,
     friends_router,
     participants_router,
+    votes_routers,
 )
 from authenticator import authenticator
 
@@ -21,6 +22,7 @@ app.include_router(activities_routers.router)
 app.include_router(countries_router.router)
 app.include_router(friends_router.router)
 app.include_router(participants_router.router)
+app.include_router(votes_routers.router)
 
 origins = ["http://localhost:3000", os.environ.get("CORS_HOST", None)]
 app.add_middleware(
