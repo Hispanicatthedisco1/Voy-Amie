@@ -4,7 +4,6 @@ from queries.pool import pool
 
 
 class VoteIn(BaseModel):
-    voter_id: int
     activity_id: int
 
 
@@ -47,3 +46,24 @@ class VotesRepository:
         except Exception as e:
             print(e)
             return {"message": "Could not get all votes"}
+
+    def create_vote(self, vote: VoteIn, voter_id) -> VoteOut:
+        with pool.connection() as conn:
+            with conn.cursor() as db:
+                result = db.execute(
+                    """
+                    INSERT INTO votes
+                        (voter_id, activity_id)
+                    VALUES
+                        (%s, %s)
+                    RETURNING vote_id;
+                    """,
+                    [
+                        voter_id,
+                        vote.activity_id,
+                    ],
+                )
+                vote_id = result.fetchone()[0]
+                old_data = vote.dict()
+                return VoteOut(
+                    vote_id=vote_id, voter_id=voter_id, **old_data)
