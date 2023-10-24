@@ -109,4 +109,19 @@ steps = [
         DROP TABLE trip_participants;
         """,
     ],
+    [
+        # "Up" SQL statement
+        """
+        CREATE TABLE votes (
+            vote_id SERIAL PRIMARY KEY NOT NULL,
+            voter_id INT REFERENCES users(user_id) NOT NULL,
+            activity_id INT NOT NULL REFERENCES activities(activity_id) ON DELETE CASCADE,
+            UNIQUE (voter_id, activity_id)
+        );
+        """,
+        # "Down" SQL statement
+        """
+        DROP TABLE votes;
+        """,
+    ],
 ]
