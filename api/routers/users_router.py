@@ -85,6 +85,20 @@ def get_one_user(
     return user
 
 
+@router.get("/users/id/{user_id}", response_model=Optional[UsersOut])
+def get_user(
+    user_id: int,
+    response: Response,
+    repo: UsersRepository = Depends(),
+    user_data: dict = Depends(authenticator.get_current_account_data),
+) -> UsersOut:
+    print("hi")
+    user = repo.get_by_user_id(user_id)
+    if user is None:
+        response.status_code = 404
+    return user
+
+
 @router.get("/users", response_model=Union[List[AllUsersOut], Error])
 def get_all_users(
     repo: UsersRepository = Depends(),
