@@ -9,6 +9,7 @@ from authenticator import authenticator
 
 from pydantic import BaseModel
 from typing import Union, List
+from queries.users import UsersOut, UsersRepository, AllUsersOut
 from queries.friends import (
     FriendsIn,
     FriendsOut,
@@ -16,6 +17,12 @@ from queries.friends import (
     Error,
     CreateFriendshipError,
 )
+
+
+class FriendsWithUserOut(BaseModel):
+    friendship_id: int
+    myself: int
+    friend: UsersOut
 
 
 class HttpError(BaseModel):
@@ -54,11 +61,22 @@ def delete_friend(
     return repo.delete_friend(friendship_id)
 
 
-@router.get("/friends", response_model=Union[List[FriendsOut], Error])
+@router.get("/friends", response_model=Union[List[AllUsersOut], Error])
 def get_all_friends(
     repo: FriendsRepository = Depends(),
+    user_repo: UsersRepository = Depends(),
     user_data: dict = Depends(authenticator.get_current_account_data),
 ):
-    print(user_data)
+
     user_id = user_data["user_id"]
-    return repo.get_all_friends(user_id=user_id)
+
+    friends_list = repo.get_all_friends(user_id=user_id)
+    my_friends = []
+
+    for friend in friends_list:
+        if user_id != friend.user1_id:
+            user = user_repo.get_by_user_id(friend.user1_id)
+        else:
+            user = user_repo.get_by_user_id(friend.user2_id)
+        my_friends.append(user)
+    return my_friends

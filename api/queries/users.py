@@ -120,3 +120,28 @@ class UsersRepository:
         except Exception as e:
             print(e)
             return {"message": "Could not get all friends"}
+
+    def get_by_user_id(self, user_id: int) -> Optional[AllUsersOut]:
+        try:
+            with pool.connection() as conn:
+                with conn.cursor() as db:
+                    result = db.execute(
+                        """
+                        SELECT user_id, username, email
+                        FROM users
+                        WHERE user_id = %s
+                        """,
+                        [user_id],
+                    )
+                    record = result.fetchone()
+                    print(record)
+                    if record is None:
+                        return None
+                    return AllUsersOut(
+                            user_id=record[0],
+                            username=record[1],
+                            email=record[2]
+                        )
+        except Exception as e:
+            print(e)
+            return {"message": "Could not get user."}
