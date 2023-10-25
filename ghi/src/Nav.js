@@ -41,10 +41,15 @@ function Nav() {
                 Profile
               </NavLink>
             </li>
-                        <li className="nav-item">
+            <li className="nav-item">
+              <NavLink className="nav-link" to="/finalized">
+                Itinarary
+              </NavLink>
+            </li>
+            <li className="nav-item">
               <NavLink className="nav-link" to="/signout">
                 Logout
-              </NavLink>
+            </NavLink>
             </li>
           </ul>
         </div>
