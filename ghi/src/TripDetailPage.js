@@ -15,6 +15,30 @@ function TripDetail() {
   const [formCommentData, setFormCommentData] = useState({
     comment: "",
   });
+  const [participants, setParticipants] = useState([]);
+  const [user, setUser] = useState([]);
+  const [votes, setVotes] = useState([]);
+
+  function countParticipants(participants) {
+    let count = 1;
+    for (let i = 0; i < participants.length; i++) {
+      if (participants[i]["trip_id"] === paramsInt) {
+        count += 1;
+      }
+    }
+    return count;
+  }
+
+  const getVotesData = async () => {
+    const votesURL = `${process.env.REACT_APP_API_HOST}/votes`;
+    const response = await fetch(votesURL, {
+      credentials: "include",
+    });
+    if (response.ok) {
+      const data = await response.json();
+      setVotes(data);
+    }
+  };
 
   const getActivitiesData = async () => {
     const activitiesUrl = `${process.env.REACT_APP_API_HOST}/activities/`;
@@ -23,10 +47,12 @@ function TripDetail() {
     });
     if (response.ok) {
       const data = await response.json();
-      console.log(data);
+      // console.log(data);
       setActivities(data);
     }
   };
+
+  // console.log(votes);
 
   const getCommentsData = async () => {
     const commentsUrl = `${process.env.REACT_APP_API_HOST}/comments?trip=${paramsInt}`;
@@ -35,16 +61,40 @@ function TripDetail() {
     });
     if (response.ok) {
       const commentsData = await response.json();
-      console.log(commentsData);
+      // console.log(commentsData);
       setComments(commentsData);
     }
   };
 
+  const getParticipantsData = async () => {
+    const participantsUrl = `${process.env.REACT_APP_API_HOST}/participants/`;
+    const response = await fetch(participantsUrl, {
+      credentials: "include",
+    });
+    if (response.ok) {
+      const participantsData = await response.json();
+      setParticipants(participantsData);
+    }
+  };
+
+  const getLoggedInUserData = async () => {
+    const userUrl = `${process.env.REACT_APP_API_HOST}/token/`;
+    const response = await fetch(userUrl, {
+      credentials: "include",
+    });
+    if (response.ok) {
+      const userData = await response.json();
+      setUser(userData);
+    }
+  };
   useEffect(() => {
     getActivitiesData();
     getCommentsData();
+    getParticipantsData();
+    getLoggedInUserData();
+    getVotesData();
   }, []); //eslint-disable-line react-hooks/exhaustive-deps
-
+  console.log(votes);
   const handleUpvote = async (
     activity_id,
     title,
@@ -70,9 +120,48 @@ function TripDetail() {
         "Content-Type": "application/json",
       },
     });
+
+    await fetch(`${process.env.REACT_APP_API_HOST}/votes`, {
+      method: "POST",
+      body: JSON.stringify({
+        vote_id: user.user.user_id,
+        activity_id: activity_id,
+      }),
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    getActivitiesData();
+    getVotesData();
+
+    const partCount = countParticipants(participants);
+    const upVoted = vote + 1;
+
+    if (upVoted >= Math.floor(partCount / 2)) {
+      await fetch(
+        `${process.env.REACT_APP_API_HOST}/activities/${activity_id}`,
+        {
+          method: "PUT",
+          body: JSON.stringify({
+            trip: paramsInt,
+            title: title,
+            url: url,
+            date: date,
+            time: time,
+            status: "FINALIZED",
+            vote: upVoted,
+          }),
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+    }
     getActivitiesData();
   };
-
   const handleDownvote = async (
     activity_id,
     title,
@@ -98,7 +187,21 @@ function TripDetail() {
         "Content-Type": "application/json",
       },
     });
+
+    await fetch(`${process.env.REACT_APP_API_HOST}/votes`, {
+      method: "POST",
+      body: JSON.stringify({
+        vote_id: user.user.user_id,
+        activity_id: activity_id,
+      }),
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
     getActivitiesData();
+    getVotesData();
   };
 
   const handleSubmit = async (e) => {
@@ -280,47 +383,49 @@ function TripDetail() {
           {activities.map((activities) => {
             if (paramsInt === activities.trip) {
               return (
-                <>
-                  <tr key={activities.activity_id}>
-                    <td className="text-center align-middle">
-                      {activities.title}
+                <tr key={activities.activity_id}>
+                  <td className="text-center align-middle">
+                    {activities.title}
+                  </td>
+                  <td>{activities.date}</td>
+                  <td>{activities.time}</td>
+                  <td>{activities.status}</td>
+                  <td>{activities.vote}</td>
+                  {votes.includes(activities.activity_id) ? null : (
+                    <td>
+                      <button
+                        onClick={() =>
+                          handleUpvote(
+                            activities.activity_id,
+                            activities.title,
+                            activities.url,
+                            activities.date,
+                            activities.time,
+                            activities.status,
+                            activities.vote
+                          )
+                        }
+                      >
+                        Yes
+                      </button>
+                      <button
+                        onClick={() =>
+                          handleDownvote(
+                            activities.activity_id,
+                            activities.title,
+                            activities.url,
+                            activities.date,
+                            activities.time,
+                            activities.status,
+                            activities.vote
+                          )
+                        }
+                      >
+                        No
+                      </button>
                     </td>
-                    <td>{activities.date}</td>
-                    <td>{activities.time}</td>
-                    <td>{activities.status}</td>
-                    <td>{activities.vote}</td>
-                    <button
-                      onClick={() =>
-                        handleUpvote(
-                          activities.activity_id,
-                          activities.title,
-                          activities.url,
-                          activities.date,
-                          activities.time,
-                          activities.status,
-                          activities.vote
-                        )
-                      }
-                    >
-                      Yes
-                    </button>
-                    <button
-                      onClick={() =>
-                        handleDownvote(
-                          activities.activity_id,
-                          activities.title,
-                          activities.url,
-                          activities.date,
-                          activities.time,
-                          activities.status,
-                          activities.vote
-                        )
-                      }
-                    >
-                      No
-                    </button>
-                  </tr>
-                </>
+                  )}
+                </tr>
               );
             } else {
               return null;
