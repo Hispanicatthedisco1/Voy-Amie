@@ -41,7 +41,7 @@ function TripDetail() {
   };
 
   const getActivitiesData = async () => {
-    const activitiesUrl = `${process.env.REACT_APP_API_HOST}/activities/`;
+    const activitiesUrl = `${process.env.REACT_APP_API_HOST}/activities`;
     const response = await fetch(activitiesUrl, {
       credentials: "include",
     });
@@ -67,7 +67,7 @@ function TripDetail() {
   };
 
   const getParticipantsData = async () => {
-    const participantsUrl = `${process.env.REACT_APP_API_HOST}/participants/`;
+    const participantsUrl = `${process.env.REACT_APP_API_HOST}/participants`;
     const response = await fetch(participantsUrl, {
       credentials: "include",
     });
@@ -78,7 +78,7 @@ function TripDetail() {
   };
 
   const getLoggedInUserData = async () => {
-    const userUrl = `${process.env.REACT_APP_API_HOST}/token/`;
+    const userUrl = `${process.env.REACT_APP_API_HOST}/token`;
     const response = await fetch(userUrl, {
       credentials: "include",
     });
@@ -207,7 +207,7 @@ function TripDetail() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const activityURL = `${process.env.REACT_APP_API_HOST}/activity/`;
+    const activityURL = `${process.env.REACT_APP_API_HOST}/activity`;
     const fetchConfig = {
       method: "post",
       body: JSON.stringify(
@@ -250,7 +250,7 @@ function TripDetail() {
   const handleCommentSubmit = async (e) => {
     e.preventDefault();
 
-    const commentURL = `${process.env.REACT_APP_API_HOST}/comments/`;
+    const commentURL = `${process.env.REACT_APP_API_HOST}/comments`;
     const fetchConfig = {
       method: "post",
       body: JSON.stringify(
@@ -381,7 +381,10 @@ function TripDetail() {
         </thead>
         <tbody>
           {activities.map((activities) => {
-            if (paramsInt === activities.trip) {
+            if (
+              paramsInt === activities.trip &&
+              activities.status === "PENDING"
+            ) {
               return (
                 <tr key={activities.activity_id}>
                   <td className="text-center align-middle">

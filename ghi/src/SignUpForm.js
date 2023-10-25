@@ -21,13 +21,16 @@ const SignUpForm = () => {
       profile_pic: profile_pic,
     };
 
-    const registrationResponse = await register(accountData, `${process.env.REACT_APP_API_HOST}/users`);
-  
+    const registrationResponse = await register(
+      accountData,
+      `${process.env.REACT_APP_API_HOST}/users`
+    );
+
     if (registrationResponse && registrationResponse.ok) {
       const user_id = registrationResponse.data.user_id;
 
       const profileData = {
-        bio, 
+        bio,
         profile_pic,
       };
 
@@ -46,7 +49,6 @@ const SignUpForm = () => {
         setBio("");
         setProfilePic("");
       }
-
 
       e.target.reset();
       navigate("/users/user_id");
@@ -112,7 +114,7 @@ const SignUpForm = () => {
                 setProfilePic(e.target.value);
               }}
             />
-          </div> 
+          </div>
           <div>
             <input className="btn btn-primary" type="submit" value="Register" />
           </div>
