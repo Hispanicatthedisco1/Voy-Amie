@@ -63,17 +63,24 @@ class ParticipantRepository:
             print(e)
             return False
 
-    def get_all_participants(self) -> Union[Error, List[ParticipantsOut]]:
+    def get_all_participants(
+        self, trip_id
+    ) -> Union[Error, List[ParticipantsOut]]:
         try:
             with pool.connection() as conn:
                 with conn.cursor() as db:
-                    result = """
+
+                    result = db.execute(
+                        """
                         SELECT participant_id, user_id, trip_id
                         FROM trip_participants
+                        WHERE trip_id = %s
                         ORDER BY participant_id
-                        """
-                    db.execute(result)
-                    records = db.fetchall()
+                        """,
+                        [trip_id],
+
+                    )
+                    records = result.fetchall()
 
                     return [ParticipantsOut(
                             participant_id=record[0],
