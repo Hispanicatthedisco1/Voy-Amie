@@ -1,141 +1,74 @@
-# Module3 Project Gamma
+Project URLS:
 
-## Getting started
+  Backend Deployment:
+    https://jun-8-pt-voyamieapi.mod3projects.com/docs#/
 
-You have a project repository, now what? The next section
-lists all of the deliverables that are due at the end of the
-week. Below is some guidance for getting started on the
-tasks for this week.
+  Frontend Deployment:
+    https://vacationeers.gitlab.io/voy-amie
 
-## Install Extensions
+  Gitlab:
+    https://gitlab.com/vacationeers/voy-amie
 
-- Prettier: <https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode>
-- Black Formatter: <https://marketplace.visualstudio.com/items?itemName=ms-python.black-formatter>
 
-## Deliverables
+Members:
 
-- [ ] Wire-frame diagrams
-- [ ] API documentation
-- [ ] Project is deployed to Caprover (BE, DB) & GitLab-pages (FE)
-- [ ] GitLab issue board is setup and in use (or project management tool of choice)
-- [ ] Journals
+  Abraham Gebreselassie: Trips Page, Trips API, Friends API
+  Hector Elias: Create Trip Page, Comments API
+  Juan Chavez: Trip Final Page, Country API, Participants API
+  Miguel Ortiz: Profile Page, Activities API, Participants API
 
-## Project layout
 
-The layout of the project is just like all of the projects
-you did with `docker-compose` in module #2. You will create
-a directory in the root of the repository for each service
-that you add to your project just like those previous
-projects were setup.
+Description:
 
-### Directories
+  Have you ever tried organizing a trip with a friend or multiple friends? If you have, then you will understand the headache that comes with trying to get everything organized and planned. Luckily Voy-Amie is here to assist you; Users of Voy-Amie can create a trip, add friends and vote to decide what activities to partake in.
 
-Several directories have been added to your project. The
-directories `docs` and `journals` are places for you and
-your team-mates to, respectively, put any documentation
-about your project that you create and to put your
-project-journal entries. See the _README.md_ file in each
-directory for more info.
+  When a user creates a trip, they have the ability to give it a name, select the destination and select the time and dates. After, the creator of the trip can add friends to be able to begin coordinating. Users can then begin to suggest trip activities to partake in, this would include the activity title, location of the activity as well as the date and the time.
 
-The other directories, `ghi` and `api`, are services, that
-you can start building off of.
+  Once the trip has been created and activities have been suggested, users that are part of the trip have the ability to vote on the activities, with a simple majority a trip is approved and sent to the final itinerary that displays all the finalized activities that can be sorted by date.
 
-Inside of `ghi` is a minimal React app that has an "under
-construction" page. It is setup similarly to all of the
-other React projects that you have worked on.
 
-Inside of `api` is a minimal FastAPI application.
-"Where are all the files?" you might ask? Well, the
-`main.py` file is the whole thing, and go take look inside
-of it... There's not even much in there..., hmm? That is
-FastAPI, we'll learn more about it in the coming days. Can
-you figure out what this little web-application does even
-though you haven't learned about FastAPI yet?
+How to Run on Local Device:
 
-Also in `api` is a directory for your migrations.
-If you choose to use PostgreSQL, then you'll want to use
-migrations to control your database. Unlike Django, where
-migrations were automatically created for you, you'll write
-yours by hand using DDL. Don't worry about not knowing what
-DDL means; we have you covered. There's a sample migration
-in there that creates two tables so you can see what they
-look like.
+  1. Open your terminal and CD into your desired directory
+  2. Clone repository grab link and type the following command into your terminal "Git clone https://gitlab.com/vacationeers/voy-amie.git"
+  3. CD into Voy-Amie
+  4. Install Docker through the following Commands
+      docker volume create postgres-data
+      docker volume create beta-data
+      docker-compose build
+      docker-compose up
+  5. With Docker up and running, in your browser go to http://localhost:8000/docs to view the FastAPI backend endpoints
+  6. With Docker up and running, in your browser go to http://localhost:3000 to view the project, navigate using the navbar
 
-The Dockerfile and Dockerfile.dev run your migrations
-for you automatically.
+Design:
 
-### Other files
+  Voy-Amie's Backend is build on FastAPI and a PostreSQL Database, the Front end consists of React and JSX for stylization.
+## Design
+![1.PNG](1.PNG)
+![API's.PNG](API's.PNG)
+![Models.PNG](Models.PNG)
+![pages.PNG](Pages.PNG)
+## Service Microservice
 
-The following project files have been created as a minimal
-starting point. Please follow the guidance for each one for
-a most successful project.
 
-- `docker-compose.yaml`: there isn't much in here, just a
-  **really** simple UI and FastAPI service. Add services
-  (like a database) to this file as you did with previous
-  projects in module #2.
-- `.gitlab-ci.yml`: This is your "ci/cd" file where you will
-  configure automated unit tests, code quality checks, and
-  the building and deployment of your production system.
-  Currently, all it does is deploy an "under construction"
-  page to your production UI on GitLab and a sample backend
-  to CapRover. We will learn much more about this file.
-- `.gitignore`: This is a file that prevents unwanted files
-  from getting added to your repository, files like
-  `pyc` files, `__pycache__`, etc. We've set it up so that
-  it has a good default configuration for Python projects.
-- `.env.sample`: This file is a template to copy when
-  creating environment variables for your team. Create a
-  copy called `.env` and put your own passwords in here
-  without fear of it being committed to git (see `.env`
-  listed in `.gitignore`). You can also put team related
-  environment variables in here, things like api and signing
-  keys that shouldn't be committed; these should be
-  duplicated in your deployed environments.
+Voy-Amie Overview:
+  The following Files and Folders are available within the Voy-Amie project.
 
-## How to complete the initial deploy
+    -Requirements.txt:
+      A file that tells the Dockerfile what it needs to install on boot.
 
-There will be further guidance on completing the initial
-deployment, but it just consists of these steps:
+    -Main.py:
+      Connects the FastAPI system to our routers.
 
-### Setup GitLab repo/project
+    -Dockerfile:
+      Allows the docker system to load and run all required information as well as run the systems through appropriate ports.
 
-- make sure this project is in a group. If it isn't, stop
-  now and move it to a GitLab group
-- remove the fork relationship: In GitLab go to:
+    -Migrations:
+      Within this folder lies 002_table_migrations.py that allows us to determine and store all of our objects and tables into the database.
 
-  Settings -> General -> Advanced -> Remove fork relationship
+    -Queries:
+      This file is the location of the pydantic models for our objects. A file is dedicated to each of our objects.
 
-- add these GitLab CI/CD variables:
-  - PUBLIC_URL : this is your gitlab pages URL
-  - REACT_APP_API_HOST: enter "blank" for now
-
-#### Your GitLab pages URL
-
-You can't find this in GitLab until after you've done a deploy
-but you can figure it out yourself from your GitLab project URL.
-
-If this is your project URL
-
-https://gitlab.com/GROUP_NAME/PROJECT_NAME
-
-then your GitLab pages URL will be
-
-https://GROUP_NAME.gitlab.io/PROJECT_NAME
-
-### Initialize CapRover
-
-1. Attain IP address and domain from an instructor
-1. Follow the steps in the CD Cookbook in Learn.
-
-### Update GitLab CI/CD variables
-
-Copy the service URL for your CapRover service and then paste
-that into the value for the REACT_APP_API_HOST CI/CD variable
-in GitLab.
-
-### Deploy it
-
-Merge a change into main to kick off the initial deploy. Once the build pipeline
-finishes you should be able to see an "under construction" page on your GitLab
-pages site.
+    -Routers:
+      Allows us to route the paths of our objects we want to create to communicate with the database.
+      Router files and Queries files work together to make sure information is being stored and sent back and forth when called.
