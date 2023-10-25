@@ -30,12 +30,16 @@ class VoteToken(Token):
 router = APIRouter()
 
 
-@router.get("/votes", response_model=Union[List[VoteOut], Error])
+@router.get("/votes", response_model=Union[List[int], Error])
 def get_all_votes(
     repo: VotesRepository = Depends(),
     user_data: dict = Depends(authenticator.get_current_account_data),
 ):
-    return repo.get_all_votes()
+    votes = repo.get_all_votes(user_data["user_id"])
+    activity_list = []
+    for vote in votes:
+        activity_list.append(vote.activity_id)
+    return activity_list
 
 
 @router.post("/votes", response_model=VoteOut | HttpError)

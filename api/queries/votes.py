@@ -22,7 +22,7 @@ class CreateVoteError(ValueError):
 
 
 class VotesRepository:
-    def get_all_votes(self) -> Union[Error, List[VoteOut]]:
+    def get_all_votes(self, user_id) -> Union[Error, List[VoteOut]]:
         try:
             with pool.connection() as conn:
                 with conn.cursor() as db:
@@ -32,7 +32,10 @@ class VotesRepository:
                         voter_id,
                         activity_id
                         FROM votes
+                        WHERE voter_id=%s
+
                         """,
+                        [user_id],
                     )
                     vote_list = []
                     for record in result:
