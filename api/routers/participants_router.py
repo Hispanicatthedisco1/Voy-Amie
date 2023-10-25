@@ -43,7 +43,8 @@ async def create_participants(
     return participant
 
 
-@router.delete("/participants/{participant_id}", response_model=bool)
+@router.delete(
+        "/participants/{participant_id}", response_model=bool)
 def delete_participant(
     participant_id: int,
     repo: ParticipantRepository = Depends(),
@@ -53,9 +54,11 @@ def delete_participant(
 
 
 @router.get(
-        "/participants", response_model=Union[List[ParticipantsOut], Error])
+        "/trips/{trip_id}/participants",
+        response_model=Union[List[ParticipantsOut], Error])
 def get_all_participants(
+    trip_id: int,
     repo: ParticipantRepository = Depends(),
     participant_data: dict = Depends(authenticator.get_current_account_data),
 ):
-    return repo.get_all_participants()
+    return repo.get_all_participants(trip_id)

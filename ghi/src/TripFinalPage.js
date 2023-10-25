@@ -2,10 +2,13 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
 function TripsFinalized() {
+    const [participants, setParticipants] = useState ([]);
     const [activities, setActivities] = useState([]);
     const [query, setQuery] = useState("");
+    const [loggedInUser, setLoggedInUser] = useState({})
     let { trip_id } = useParams();
     let trip_id_int = parseInt(trip_id)
+
 
     const filteredDate = activities.filter(activity => activity.date.includes(query))
 
@@ -23,9 +26,38 @@ function TripsFinalized() {
         }
     }
 
+    const  fetchParticipant = async () => {
+        const response = await fetch(`${process.env.REACT_APP_API_HOST}/trips/${trip_id}/participants`, {
+            credentials: "include",
+        });
+        if (response.ok) {
+            const data = await response.json();
+            setParticipants(data)
+        }
+    }
+
+    const  getLoggedInUser = async () => {
+        const response = await fetch(`${process.env.REACT_APP_API_HOST}/token`, {
+            credentials: "include",
+        });
+        if (response.ok) {
+            const data = await response.json();
+            setLoggedInUser(data)
+        }
+    }
+
+
     useEffect(() => {
         getActivitiesData();
-    }, []);
+        fetchParticipant();
+        getLoggedInUser();
+}, []); //eslint-disable-line react-hooks/exhaustive-deps
+console.log(loggedInUser)
+const isParticipant = participants.some((participant) => participant?.participant_id === loggedInUser?.user?.user_id);
+
+if (!isParticipant) {
+    return <p>You are not a participant of this trip.</p>;
+}
 
     return (
         <>
@@ -60,12 +92,10 @@ function TripsFinalized() {
                                     return null
                                 }
                             })}
-                            return null;
                     </tbody>
                 </table>
             </div>
         </>
     );
 }
-
 export default TripsFinalized;

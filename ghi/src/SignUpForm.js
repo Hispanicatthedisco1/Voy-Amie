@@ -7,22 +7,50 @@ const SignUpForm = () => {
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [bio, setBio] = useState("");
-  const [profilePic, setProfilePic] = useState("");
+  const [profile_pic, setProfilePic] = useState("");
   const { register } = useToken();
   const navigate = useNavigate();
 
-  const handleRegistration = (e) => {
+  const handleRegistration = async (e) => {
     e.preventDefault();
     const accountData = {
       username: username,
       password: password,
       email: email,
       bio: bio,
-      profilePic: profilePic,
+      profile_pic: profile_pic,
     };
-    register(accountData, `${process.env.REACT_APP_API_HOST}/users/`);
-    e.target.reset();
-    navigate("/");
+
+    const registrationResponse = await register(accountData, `${process.env.REACT_APP_API_HOST}/users`);
+  
+    if (registrationResponse && registrationResponse.ok) {
+      const user_id = registrationResponse.data.user_id;
+
+      const profileData = {
+        bio, 
+        profile_pic,
+      };
+
+      const profileUrl = `${process.env.REACT_APP_API_HOST}/users/${user_id}`;
+      const fetchConfig = {
+        method: "POST",
+        body: JSON.stringify(profileData),
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+
+      const response = await fetch(profileUrl, fetchConfig);
+      if (response.ok) {
+        setBio("");
+        setProfilePic("");
+      }
+
+
+      e.target.reset();
+      navigate("/users/user_id");
+    }
   };
 
   return (
@@ -75,16 +103,16 @@ const SignUpForm = () => {
             />
           </div>
           <div className="mb-3">
-            <label className="form-label">profilePic</label>
+            <label className="form-label">Profile Pic</label>
             <input
-              name="profilePic"
+              name="profile_pic"
               type="text"
               className="form-control"
               onChange={(e) => {
                 setProfilePic(e.target.value);
               }}
             />
-          </div>
+          </div> 
           <div>
             <input className="btn btn-primary" type="submit" value="Register" />
           </div>

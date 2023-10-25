@@ -26,6 +26,12 @@ class AllUsersOut(BaseModel):
     email: str
 
 
+class UsersInUpdate(BaseModel):
+    user_id: int
+    bio: Optional[str]
+    profile_pic: Optional[str]
+
+
 class Error(BaseModel):
     message: str
 
@@ -121,13 +127,13 @@ class UsersRepository:
             print(e)
             return {"message": "Could not get all friends"}
 
-    def get_by_user_id(self, user_id: int) -> Optional[AllUsersOut]:
+    def get_by_user_id(self, user_id: int) -> Optional[UsersOut]:
         try:
             with pool.connection() as conn:
                 with conn.cursor() as db:
                     result = db.execute(
                         """
-                        SELECT user_id, username, email
+                        SELECT user_id, username, email, bio, profile_pic
                         FROM users
                         WHERE user_id = %s
                         """,
@@ -137,11 +143,45 @@ class UsersRepository:
                     print(record)
                     if record is None:
                         return None
-                    return AllUsersOut(
+                    return UsersOut(
                             user_id=record[0],
                             username=record[1],
-                            email=record[2]
+                            email=record[2],
+                            bio=record[3],
+                            profile_pic=record[4]
                         )
         except Exception as e:
             print(e)
             return {"message": "Could not get user."}
+
+    def update_user(
+        self, user_id: int, user: UsersInUpdate, username
+    ) -> Union[UsersOut, Error]:
+        try:
+            with pool.connection() as conn:
+                with conn.cursor() as db:
+                    result = db.execute(
+                        """
+                        UPDATE users
+                        SET bio=%s,
+                        profile_pic=%s
+                        WHERE user_id=%s
+                        RETURNING *
+                        """,
+                        [
+                            user.bio,
+                            user.profile_pic,
+                            user_id,
+                        ],
+                    )
+                    record = result.fetchone()
+                    return UsersOut(
+                        user_id=record[0],
+                        username=record[1],
+                        email=record[2],
+                        bio=record[3],
+                        profile_pic=record[4]
+                        )
+        except Exception as e:
+            print(e)
+            return {"message": "Could not update user."}

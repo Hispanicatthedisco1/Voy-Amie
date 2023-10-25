@@ -78,6 +78,7 @@ def get_all(
     repo: TripsRepository = Depends(),
     user_data: dict = Depends(authenticator.get_current_account_data),
 ):
+
     planner = user_data["username"]
     return repo.get_all_trips(planner=planner)
 

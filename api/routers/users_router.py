@@ -15,6 +15,7 @@ from queries.users import (
     UsersIn,
     UsersOut,
     AllUsersOut,
+    UsersInUpdate,
     UsersRepository,
     DuplicateAccountError,
     Error,
@@ -106,3 +107,14 @@ def get_all_users(
 ):
 
     return repo.get_all_users()
+
+
+@router.put("/users/{user_id}", response_model=Union[UsersOut, Error])
+def update_user(
+    user_id: int,
+    user: UsersInUpdate,
+    repo: UsersRepository = Depends(),
+    user_data: dict = Depends(authenticator.get_current_account_data),
+) -> Union[UsersOut, Error]:
+    username = user_data["username"]
+    return repo.update_user(user_id, user, username=username)

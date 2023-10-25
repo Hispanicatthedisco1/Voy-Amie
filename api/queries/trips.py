@@ -136,20 +136,15 @@ class TripsRepository:
                 with conn.cursor() as db:
                     result = db.execute(
                         """
-                        SELECT trip_id,
-                        planner,
-                        trip_name,
-                        city,
-                        country,
-                        start_date,
-                        end_date
+                        SELECT *
                         FROM trips
-                        WHERE planner=%s
+                        WHERE planner = %s
                         """,
                         [planner],
                     )
+                    trips = result.fetchall()
                     trip_list = []
-                    for record in result:
+                    for record in trips:
                         trip = TripOut(
                             trip_id=record[0],
                             planner=record[1],
