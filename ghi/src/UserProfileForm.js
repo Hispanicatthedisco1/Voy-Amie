@@ -151,7 +151,9 @@ const UserProfileForm = () => {
                 <tr key={filteredTrips.trip_id}>
                   <td>{filteredTrips.trip_id}</td>
                   <td>{filteredTrips.planner}</td>
-                  <td>{filteredTrips.trip_name}</td>
+                  <td>
+                    <a href={`/trips/${filteredTrips.trip_id}`}>{filteredTrips.trip_name}</a>
+                  </td>
                   <td>{filteredTrips.city}</td>
                   <td>{filteredTrips.country}</td>
                   <td>{filteredTrips.start_date}</td>
