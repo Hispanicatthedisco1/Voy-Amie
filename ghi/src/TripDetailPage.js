@@ -67,7 +67,7 @@ function TripDetail() {
   };
 
   const getParticipantsData = async () => {
-    const participantsUrl = `${process.env.REACT_APP_API_HOST}/participants`;
+    const participantsUrl = `${process.env.REACT_APP_API_HOST}/trips/${paramsInt}/participants`;
     const response = await fetch(participantsUrl, {
       credentials: "include",
     });
