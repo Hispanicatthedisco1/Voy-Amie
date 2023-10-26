@@ -51,7 +51,7 @@ const SignUpForm = () => {
       }
 
       e.target.reset();
-      navigate("/users/user_id");
+      navigate("/profile/user_id");
     }
   };
 
