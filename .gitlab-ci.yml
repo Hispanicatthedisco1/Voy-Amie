@@ -58,7 +58,7 @@ build-front-end-job:
     - cd ghi
     - npm install
     - npm run build
-    - cp build/index.html build/404.html
+    - echo "/* /index.html 200" > build/_redirects
   artifacts:
     paths:
       - ghi/build/
