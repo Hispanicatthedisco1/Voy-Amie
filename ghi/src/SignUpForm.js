@@ -21,38 +21,12 @@ const SignUpForm = () => {
       profile_pic: profile_pic,
     };
 
-    const registrationResponse = await register(
-      accountData,
-      `${process.env.REACT_APP_API_HOST}/users`
-    );
-
-    if (registrationResponse && registrationResponse.ok) {
-      const user_id = registrationResponse.data.user_id;
-
-      const profileData = {
-        bio,
-        profile_pic,
-      };
-
-      const profileUrl = `${process.env.REACT_APP_API_HOST}/users/${user_id}`;
-      const fetchConfig = {
-        method: "POST",
-        body: JSON.stringify(profileData),
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      };
-
-      const response = await fetch(profileUrl, fetchConfig);
-      if (response.ok) {
-        setBio("");
-        setProfilePic("");
-      }
-
-      e.target.reset();
-      navigate("/profile/user_id");
-    }
+    const registrationResponse = await register(accountData, `${process.env.REACT_APP_API_HOST}/users`);
+    console.log(registrationResponse)
+    
+    e.target.reset();
+    navigate("/profile");
+    
   };
 
   return (

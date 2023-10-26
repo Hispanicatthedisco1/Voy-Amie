@@ -16,8 +16,8 @@ function App() {
   return (
     <div className="container">
       <BrowserRouter basename={basename}>
-        <Nav />
         <AuthProvider baseUrl={process.env.REACT_APP_API_HOST}>
+          <Nav />
           <Routes>
             <Route exact path="/users" element={<SignUpForm />}></Route>
             <Route exact path="/login" element={<LoginForm />}></Route>
@@ -35,7 +35,7 @@ function App() {
             ></Route>
             <Route
               exact
-              path="/profile/:user_id"
+              path="/profile"
               element={<UserProfileForm />}
             ></Route>
           </Routes>
