@@ -455,6 +455,9 @@ function TripDetail() {
           <button className="btn btn-primary">Create</button>
         </form>
       </div>
+      <a href={`/finalized/${paramsInt}`}>
+        <button className="btn btn-success mt-4">TripsFinalized</button>
+      </a>
     </>
   );
 }
