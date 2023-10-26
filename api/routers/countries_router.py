@@ -13,7 +13,6 @@ from queries.countries import (
     CountriesOut,
     CountryRepository,
     Error,
-
 )
 from typing import Union, List
 
@@ -49,7 +48,7 @@ async def get_country_by_name(
     return country
 
 
-@router.get("/countries/", response_model=Union[List[CountriesOut], Error])
+@router.get("/countries", response_model=Union[List[CountriesOut], Error])
 async def get_all_countries(
     activity_data: dict = Depends(authenticator.get_current_account_data),
     repo: CountryRepository = Depends(),
@@ -58,7 +57,8 @@ async def get_all_countries(
 
 
 @router.put(
-        "/countries/{country_id}", response_model=Union[CountriesOut, Error])
+    "/countries/{country_id}", response_model=Union[CountriesOut, Error]
+)
 def update_country(
     country_id: int,
     country: CountriesIn,
@@ -66,7 +66,10 @@ def update_country(
     country_data: dict = Depends(authenticator.get_current_account_data),
 ) -> Union[CountriesOut, Error]:
     # planner = country_data["country_name"]
-    return repo.update_country(country_id, country,)
+    return repo.update_country(
+        country_id,
+        country,
+    )
 
 
 @router.delete("/countries/{country_id}", response_model=bool)

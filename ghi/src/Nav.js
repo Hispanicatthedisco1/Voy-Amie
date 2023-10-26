@@ -1,6 +1,11 @@
 import { NavLink } from "react-router-dom";
+import useToken from "@galvanize-inc/jwtdown-for-react";
+
 
 function Nav() {
+  const { logout } = useToken();
+
+
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-success">
       <div className="container-fluid">
@@ -20,37 +25,45 @@ function Nav() {
         </button>
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav">
-            <li className="nav-item">
-              <NavLink className="nav-link" to="/">
-                Homepage
-              </NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink className="nav-link" to="/login">
-                Login
-              </NavLink>
-            </li>
+              <>
+              <li className="nav-item">
+                <NavLink className="nav-link" to="/">
+                  Homepage
+                </NavLink>
+              </li>          
+              <li className="nav-item">
+                <NavLink className="nav-link" to="/profile">
+                  Profile
+                </NavLink>
+              </li>
+              <li className="nav-item">
+                <NavLink className="nav-link" to="/finalized">
+                  Itinerary
+                </NavLink>
+              </li>
+              <li className="nav-item">
+                <NavLink className="nav-link" to="/trips">
+                  Create Trip
+                </NavLink>
+              </li>
 
-            <li className="nav-item">
-              <NavLink className="nav-link" to="/users">
-                Sign up
-              </NavLink>
-            </li>            
-            <li className="nav-item">
-              <NavLink className="nav-link" to="/profile">
-                Profile
-              </NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink className="nav-link" to="/finalized">
-                Itinarary
-              </NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink className="nav-link" to="/signout">
-                Logout
-            </NavLink>
-            </li>
+              <li className="nav-item">
+                <NavLink className="nav-link" to="/login">
+                  Login
+                </NavLink>
+              </li>
+
+              <li className="nav-item">
+                <NavLink className="nav-link" to="/users">
+                  Sign up
+                </NavLink>
+              </li>
+              <li className="nav-item">
+                <NavLink className="nav-link" to="/login" onClick={logout} >
+                  Logout
+                </NavLink>
+              </li>            
+              </>
           </ul>
         </div>
       </div>
