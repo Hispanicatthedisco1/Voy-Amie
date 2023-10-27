@@ -100,15 +100,6 @@ function TripDetail() {
     }
   };
 
-  useEffect(() => {
-    getActivitiesData();
-    getCommentsData();
-    getParticipantsData();
-    getLoggedInUserData();
-    getVotesData();
-    fetchTripData();
-  }, []); //eslint-disable-line react-hooks/exhaustive-deps
-
   const handleUpvote = async (
     activity_id,
     title,
@@ -302,16 +293,30 @@ function TripDetail() {
   const isPlanner = () => {
     if (user?.user?.username === trip.planner) {
       return true;
+    } else {
+      return false;
     }
   };
 
+  useEffect(() => {
+    getActivitiesData();
+    getCommentsData();
+    getParticipantsData();
+    getLoggedInUserData();
+    getVotesData();
+    fetchTripData();
+    isPlanner();
+  }, []); //eslint-disable-line react-hooks/exhaustive-deps
+
   console.log(isPlanner());
+
   const isParticipant = participants.some(
-    (participants) => participants?.participant_id === user?.user?.user_id
+    (participants) => participants?.user_id === user?.user?.user_id
   );
   if (!(isParticipant || isPlanner())) {
     return <p>You are not the Planner or a Participant</p>;
   }
+  console.log(isParticipant);
   return (
     <>
       <h1>{trip?.trip_name}</h1>
