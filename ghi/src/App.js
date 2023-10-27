@@ -10,6 +10,7 @@ import TripsFinalized from "./TripFinalPage";
 import TripDetail from "./TripDetailPage";
 import CreateParticipants from "./Participants";
 import Homepage from "./HomePage";
+import CreateFriend from "./CreateFriend";
 
 function App() {
   const domain = /https:\/\/[^/]+/;
@@ -31,6 +32,7 @@ function App() {
               path="/trips/:trip_id/participants"
               element={<CreateParticipants />}
             ></Route>
+            <Route exact path="/friends" element={<CreateFriend />}></Route>
             <Route
               exact
               path="/trips/:trip_id"

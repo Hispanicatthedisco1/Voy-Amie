@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import useToken from "@galvanize-inc/jwtdown-for-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+
 
 const UserProfileForm = () => {
   const [userIdInt, setUserIdInt] = useState(0);
@@ -9,6 +10,7 @@ const UserProfileForm = () => {
   const [trips, setTrips] = useState([]);
   const [trip_query, setTripQuery] = useState("");
   const { token } = useToken();
+  const navigate = useNavigate();
 
   const getTripsData = async () => {
     const tripUrl = `${process.env.REACT_APP_API_HOST}/trips`;
@@ -120,9 +122,17 @@ const UserProfileForm = () => {
           </div>
         </div>
       </div>
-      <button className="btn btn-primary" onClick={handleSubmit}>
+      <button className="btn btn-primary btn-sm m-1" onClick={handleSubmit}>
         Save Changes
       </button>
+      <div>
+        <button
+          className="btn btn-info btn-sm m-1"
+          onClick={() => navigate("/friends")}
+        >
+          Add Friends
+        </button>
+      </div>
       <h1>Trip History</h1>
       <div>
         <label

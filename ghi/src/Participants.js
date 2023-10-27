@@ -9,7 +9,7 @@ function CreateParticipants(){
     let paramsInt = parseInt(params.trip_id);
     const [friends, setFriends] = useState([]);
     const [participants, setParticipants] = useState([]);
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
 
     const fetchFriends = async () => {
