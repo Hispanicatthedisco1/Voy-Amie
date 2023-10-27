@@ -8,6 +8,7 @@ import Nav from "./Nav";
 import UserProfileForm from "./UserProfileForm";
 import TripsFinalized from "./TripFinalPage";
 import TripDetail from "./TripDetailPage";
+import CreateParticipants from "./Participants";
 
 function App() {
   const domain = /https:\/\/[^/]+/;
@@ -23,6 +24,7 @@ function App() {
             <Route exact path="/login" element={<LoginForm />}></Route>
             <Route exact path="/trips" element={<CreateTrip />}></Route>
             <Route exact path="/finalized" element={<TripsFinalized />}></Route>
+            <Route exact path="/trips/:trip_id/participants" element={<CreateParticipants />}></Route>
             <Route
               exact
               path="/trips/:trip_id"

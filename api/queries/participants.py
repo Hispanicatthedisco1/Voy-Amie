@@ -8,9 +8,16 @@ class ParticipantsIn(BaseModel):
     trip_id: int
 
 
+class CreateParticipantsOut(BaseModel):
+    participant_id: int
+    user_id: int
+    trip_id: int
+
+
 class ParticipantsOut(BaseModel):
     participant_id: int
     user_id: int
+    username: str
     trip_id: int
 
 
@@ -25,7 +32,7 @@ class CreateParticipantError(ValueError):
 class ParticipantRepository:
     def create_participants(
         self, participant: ParticipantsIn
-    ) -> Union[ParticipantsOut, Error]:
+    ) -> Union[CreateParticipantsOut, Error]:
         with pool.connection() as conn:
             with conn.cursor() as db:
                 result = db. execute(
@@ -43,7 +50,7 @@ class ParticipantRepository:
                 )
                 participant_id = result.fetchone()[0]
                 old_data = participant.dict()
-                return ParticipantsOut(
+                return CreateParticipantsOut(
                     participant_id=participant_id, **old_data
                 )
 
@@ -69,23 +76,26 @@ class ParticipantRepository:
         try:
             with pool.connection() as conn:
                 with conn.cursor() as db:
-
                     result = db.execute(
                         """
-                        SELECT participant_id, user_id, trip_id
+                        SELECT trip_participants.participant_id,
+                            trip_participants.user_id,
+                            users.username,
+                            trip_participants.trip_id
                         FROM trip_participants
-                        WHERE trip_id = %s
+                        JOIN users
+                        ON trip_participants.user_id = users.user_id
+                        WHERE trip_id=%s
                         ORDER BY participant_id
                         """,
-                        [trip_id],
-
-                    )
+                        [trip_id]
+                        )
                     records = result.fetchall()
-
                     return [ParticipantsOut(
                             participant_id=record[0],
                             user_id=record[1],
-                            trip_id=record[2],
+                            username=record[2],
+                            trip_id=record[3]
                             )
                             for record in records
                             ]
