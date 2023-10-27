@@ -125,6 +125,7 @@ function TripDetail() {
         "Content-Type": "application/json",
       },
     });
+    getParticipantsData();
 
     await fetch(`${process.env.REACT_APP_API_HOST}/votes`, {
       method: "POST",
@@ -192,6 +193,8 @@ function TripDetail() {
         "Content-Type": "application/json",
       },
     });
+
+    getParticipantsData();
 
     await fetch(`${process.env.REACT_APP_API_HOST}/votes`, {
       method: "POST",
