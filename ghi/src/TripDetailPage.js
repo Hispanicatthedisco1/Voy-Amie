@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function TripDetail() {
   let params = useParams();
@@ -20,6 +20,7 @@ function TripDetail() {
   const [user, setUser] = useState([]);
   const [votes, setVotes] = useState([]);
   const [trip, setTrip] = useState([]);
+  const navigate = useNavigate();
 
   function countParticipants(participants) {
     let count = 1;
@@ -378,7 +379,7 @@ function TripDetail() {
       <table>
         <thead>
           <tr>
-            <th>Trip Pal</th>
+            <th>Trip Pals</th>
           </tr>
         </thead>
         <tbody>
@@ -391,94 +392,108 @@ function TripDetail() {
           })}
         </tbody>
       </table>
-      <h2>Comments</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Commenter</th>
-            <th>Comment</th>
-          </tr>
-        </thead>
-        <tbody>
-          {comments.map((comments) => {
-            return (
-              <tr key={comments.comment_id}>
-                <td>{comments.commenter}</td>
-                <td>{comments.comment}</td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-      <h2>Activities</h2>
-      <table>
-        <thead>
-          <tr>
-            <td>Title</td>
-            <td>Date</td>
-            <td>Time</td>
-            <td>Status</td>
-            <td>Vote Count</td>
-            <td>Vote!</td>
-          </tr>
-        </thead>
-        <tbody>
-          {activities.map((activities) => {
-            if (
-              paramsInt === activities.trip &&
-              activities.status === "PENDING"
-            ) {
+      {isPlanner() ? (
+        <div>
+          <button
+            className="btn btn-info btn-sm m-1"
+            onClick={() => navigate(`/trips/${paramsInt}/participants`)}
+          >
+            Add Participants
+          </button>
+        </div>
+      ) : null}
+      <div>
+        <h2>Comments</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Commenter</th>
+              <th>Comment</th>
+            </tr>
+          </thead>
+          <tbody>
+            {comments.map((comments) => {
               return (
-                <tr key={activities.activity_id}>
-                  <td className="text-center align-middle">
-                    {activities.title}
-                  </td>
-                  <td>{activities.date}</td>
-                  <td>{activities.time}</td>
-                  <td>{activities.status}</td>
-                  <td>{activities.vote}</td>
-                  {votes.includes(activities.activity_id) ? null : (
-                    <td>
-                      <button
-                        onClick={() =>
-                          handleUpvote(
-                            activities.activity_id,
-                            activities.title,
-                            activities.url,
-                            activities.date,
-                            activities.time,
-                            activities.status,
-                            activities.vote
-                          )
-                        }
-                      >
-                        Yes
-                      </button>
-                      <button
-                        onClick={() =>
-                          handleDownvote(
-                            activities.activity_id,
-                            activities.title,
-                            activities.url,
-                            activities.date,
-                            activities.time,
-                            activities.status,
-                            activities.vote
-                          )
-                        }
-                      >
-                        No
-                      </button>
-                    </td>
-                  )}
+                <tr key={comments.comment_id}>
+                  <td>{comments.commenter}</td>
+                  <td>{comments.comment}</td>
                 </tr>
               );
-            } else {
-              return null;
-            }
-          })}
-        </tbody>
-      </table>
+            })}
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <h2>Activities</h2>
+        <table>
+          <thead>
+            <tr>
+              <td>Title</td>
+              <td>Date</td>
+              <td>Time</td>
+              <td>Status</td>
+              <td>Vote Count</td>
+              <td>Vote!</td>
+            </tr>
+          </thead>
+          <tbody>
+            {activities.map((activities) => {
+              if (
+                paramsInt === activities.trip &&
+                activities.status === "PENDING"
+              ) {
+                return (
+                  <tr key={activities.activity_id}>
+                    <td className="text-center align-middle">
+                      {activities.title}
+                    </td>
+                    <td>{activities.date}</td>
+                    <td>{activities.time}</td>
+                    <td>{activities.status}</td>
+                    <td>{activities.vote}</td>
+                    {votes.includes(activities.activity_id) ? null : (
+                      <td>
+                        <button
+                          onClick={() =>
+                            handleUpvote(
+                              activities.activity_id,
+                              activities.title,
+                              activities.url,
+                              activities.date,
+                              activities.time,
+                              activities.status,
+                              activities.vote
+                            )
+                          }
+                        >
+                          Yes
+                        </button>
+                        <button
+                          onClick={() =>
+                            handleDownvote(
+                              activities.activity_id,
+                              activities.title,
+                              activities.url,
+                              activities.date,
+                              activities.time,
+                              activities.status,
+                              activities.vote
+                            )
+                          }
+                        >
+                          No
+                        </button>
+                      </td>
+                    )}
+                  </tr>
+                );
+              } else {
+                return null;
+              }
+            })}
+          </tbody>
+        </table>
+      </div>
       <div className="shadow p-4 mt-4">
         <h1>Add A Comment</h1>
         <form onSubmit={handleCommentSubmit} id="create-customer-form">
