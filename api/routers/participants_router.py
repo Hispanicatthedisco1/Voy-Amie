@@ -13,6 +13,7 @@ from queries.participants import (
     ParticipantsIn,
     ParticipantsOut,
     ParticipantRepository,
+    CreateParticipantsOut,
     Error,
     CreateParticipantError,
 )
@@ -25,7 +26,7 @@ class HttpError(BaseModel):
 router = APIRouter()
 
 
-@router.post("/participants", response_model=ParticipantsOut | HttpError)
+@router.post("/participants", response_model=CreateParticipantsOut | HttpError)
 async def create_participants(
     info: ParticipantsIn,
     request: Request,

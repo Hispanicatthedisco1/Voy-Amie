@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import useToken from "@galvanize-inc/jwtdown-for-react";
-
+import { Link } from "react-router-dom";
 
 const UserProfileForm = () => {
   const [userIdInt, setUserIdInt] = useState(0);
@@ -8,14 +8,13 @@ const UserProfileForm = () => {
   const [profile_pic, setProfilePic] = useState("");
   const [trips, setTrips] = useState([]);
   const [trip_query, setTripQuery] = useState("");
-  const { token } = useToken();  
+  const { token } = useToken();
 
-  const getTripsData =  async () => {
-    const tripUrl = `${process.env.REACT_APP_API_HOST}/trips/`;
-    const response = await fetch(tripUrl,
-      {
-        credentials: "include",
-      });
+  const getTripsData = async () => {
+    const tripUrl = `${process.env.REACT_APP_API_HOST}/trips`;
+    const response = await fetch(tripUrl, {
+      credentials: "include",
+    });
 
     if (response.ok) {
       const tripsData = await response.json();
@@ -25,29 +24,28 @@ const UserProfileForm = () => {
     }
   };
 
-  const getUserData =  async () => {
-  const userUrl = `${process.env.REACT_APP_API_HOST}/token`;
-  const response = await fetch(userUrl, {
-    method: "GET",
-    credentials: "include", 
-    })
+  const getUserData = async () => {
+    const userUrl = `${process.env.REACT_APP_API_HOST}/token`;
+    const response = await fetch(userUrl, {
+      method: "GET",
+      credentials: "include",
+    });
     const userData = await response.json();
     console.log(userData);
 
     if (response.ok) {
-      setUserIdInt(userData?.user.user_id)
+      setUserIdInt(userData?.user.user_id);
       if (userData?.user.bio === null) {
         setBio("");
-     } else {
-      setBio(userData?.user.bio);
-     } 
-     if (userData?.user.profile_pic === null) {
-      setProfilePic("");
-     } else {
-      setProfilePic(userData?.user.profile_pic)
-     }
+      } else {
+        setBio(userData?.user.bio);
       }
-    
+      if (userData?.user.profile_pic === null) {
+        setProfilePic("");
+      } else {
+        setProfilePic(userData?.user.profile_pic);
+      }
+    }
   };
 
   useEffect(() => {
@@ -66,15 +64,15 @@ const UserProfileForm = () => {
       profile_pic: profile_pic,
     };
 
-      const updateUserProfileUrl = `${process.env.REACT_APP_API_HOST}/users/${userIdInt}`;
-      await fetch(updateUserProfileUrl, {
-        method: "PUT",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
+    const updateUserProfileUrl = `${process.env.REACT_APP_API_HOST}/users/${userIdInt}`;
+    await fetch(updateUserProfileUrl, {
+      method: "PUT",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
   };
 
   const filteredTrips = trips.filter((trip) =>
@@ -152,7 +150,9 @@ const UserProfileForm = () => {
                   <td>{filteredTrips.trip_id}</td>
                   <td>{filteredTrips.planner}</td>
                   <td>
-                    <a href={`/trips/${filteredTrips.trip_id}`}>{filteredTrips.trip_name}</a>
+                    <Link to={`/trips/${filteredTrips.trip_id}`}>
+                      {filteredTrips.trip_name}
+                    </Link>
                   </td>
                   <td>{filteredTrips.city}</td>
                   <td>{filteredTrips.country}</td>
@@ -165,7 +165,7 @@ const UserProfileForm = () => {
         </table>
       </div>
     </>
-);
-}
+  );
+};
 
 export default UserProfileForm;
