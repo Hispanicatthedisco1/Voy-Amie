@@ -8,6 +8,7 @@ import Nav from "./Nav";
 import UserProfileForm from "./UserProfileForm";
 import TripsFinalized from "./TripFinalPage";
 import TripDetail from "./TripDetailPage";
+import CreateParticipants from "./Participants";
 
 function App() {
   const domain = /https:\/\/[^/]+/;
@@ -19,7 +20,6 @@ function App() {
         <AuthProvider baseUrl={process.env.REACT_APP_API_HOST}>
           <Nav />
           <Routes>
-            <Route exact path="/" element={<Homepage />}></Route>
             <Route exact path="/users" element={<SignUpForm />}></Route>
             <Route exact path="/login" element={<LoginForm />}></Route>
             <Route exact path="/trips" element={<CreateTrip />}></Route>
