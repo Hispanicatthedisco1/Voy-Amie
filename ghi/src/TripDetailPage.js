@@ -374,6 +374,23 @@ function TripDetail() {
           <button className="btn btn-primary">Create</button>
         </form>
       </div>
+      <h2>Participants</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Trip Pal</th>
+          </tr>
+        </thead>
+        <tbody>
+          {participants.map((participant) => {
+            return (
+              <tr key={participant.participant_id} value={participant.username}>
+                <td>{participant.username}</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
       <h2>Comments</h2>
       <table>
         <thead>
