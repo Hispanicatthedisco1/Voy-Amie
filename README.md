@@ -74,6 +74,15 @@ Voy-Amie Overview:
       Allows us to route the paths of our objects we want to create to communicate with the database.
       Router files and Queries files work together to make sure information is being stored and sent back and forth when called.
 
+
+
+<h3>Juans Readme:</h3>
+
+<p>On the back end I was tasked with creating the countries table, queries and router that allows us to create/delete/get a country were the trips will take place. I also assisted in building the endpoints for the participants as well as helped with the backend Auth and I also build the Readme infrastructure and built a UnitTest</p>
+
+<p>On the frontend I Was tasked with creating the Final Trips page / Itinerary that displayed the activities that had been voted on approved and finalized. On this page the information of the approved/finalized trips can be seen as well as filtered by date. This page is Authorize protected to only allow the people who are participants of a trip to be able to see this page, if you are not a participant a message will appear informing you that you are not able to see the information. On a smaller scale I also assisted with the Trip Detail pages authorization, the Sign up page Navigation allowing the user to navigate to the profile upon completing a trips form, the Home Page and updated the navbar.</p>
+
+
 ## Frontend Description
 
   - Create Trip:
