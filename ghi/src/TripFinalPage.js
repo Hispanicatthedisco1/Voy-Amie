@@ -75,13 +75,15 @@ function TripsFinalized() {
   const isPlanner = () => {
     if (loggedInUser?.user?.username === trip.planner) {
       return true;
+    } else {
+      return false;
     }
   };
 
   console.log(isPlanner());
 
   const isParticipant = participants.some(
-    (participant) => participant?.participant_id === loggedInUser?.user?.user_id
+    (participant) => participant?.user_id === loggedInUser?.user?.user_id
   );
 
   if (!(isParticipant || isPlanner())) {
