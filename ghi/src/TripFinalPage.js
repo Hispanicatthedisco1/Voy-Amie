@@ -8,6 +8,7 @@ function TripsFinalized() {
   const [loggedInUser, setLoggedInUser] = useState({});
   let { trip_id } = useParams();
   let trip_id_int = parseInt(trip_id);
+  const [trip, setTrip] = useState([]);
 
   const filteredDate = activities.filter((activity) =>
     activity.date.includes(query)
@@ -50,18 +51,41 @@ function TripsFinalized() {
     }
   };
 
+  const getTripData = async () => {
+    const response = await fetch(
+      `${process.env.REACT_APP_API_HOST}/trips/${trip_id}`,
+      {
+        credentials: "include",
+      }
+    );
+    if (response.ok) {
+      const data = await response.json();
+      setTrip(data);
+    }
+  };
+
   useEffect(() => {
     getActivitiesData();
     fetchParticipant();
     getLoggedInUser();
+    getTripData();
   }, []); //eslint-disable-line react-hooks/exhaustive-deps
   console.log(loggedInUser);
+
+  const isPlanner = () => {
+    if (loggedInUser?.user?.username === trip.planner) {
+      return true;
+    }
+  };
+
+  console.log(isPlanner());
+
   const isParticipant = participants.some(
     (participant) => participant?.participant_id === loggedInUser?.user?.user_id
   );
 
-  if (!isParticipant) {
-    return <p>You are not a participant of this trip.</p>;
+  if (!(isParticipant || isPlanner())) {
+    return <p>You are not a participant or planner of this trip.</p>;
   }
 
   return (
@@ -89,7 +113,7 @@ function TripsFinalized() {
             {filteredDate.map((filteredDate) => {
               if (
                 trip_id_int === filteredDate.trip &&
-                filteredDate.status === "finalized"
+                filteredDate.status === "FINALIZED"
               ) {
                 return (
                   <tr key={filteredDate.activity_id}>

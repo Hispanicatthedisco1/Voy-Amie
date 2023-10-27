@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./App.css";
-import { AuthProvider, } from "@galvanize-inc/jwtdown-for-react";
+import { AuthProvider } from "@galvanize-inc/jwtdown-for-react";
 import SignUpForm from "./SignUpForm.js";
 import LoginForm from "./LogInForm.js";
 import CreateTrip from "./CreateTripForm.js";
@@ -26,7 +26,11 @@ function App() {
             <Route exact path="/login" element={<LoginForm />}></Route>
             <Route exact path="/trips" element={<CreateTrip />}></Route>
             <Route exact path="/finalized" element={<TripsFinalized />}></Route>
-            <Route exact path="/trips/:trip_id/participants" element={<CreateParticipants />}></Route>
+            <Route
+              exact
+              path="/trips/:trip_id/participants"
+              element={<CreateParticipants />}
+            ></Route>
             <Route
               exact
               path="/trips/:trip_id"
@@ -37,11 +41,7 @@ function App() {
               path="/finalized/:trip_id"
               element={<TripsFinalized />}
             ></Route>
-            <Route
-              exact
-              path="/profile"
-              element={<UserProfileForm />}
-            ></Route>
+            <Route exact path="/profile" element={<UserProfileForm />}></Route>
           </Routes>
         </AuthProvider>
       </BrowserRouter>
