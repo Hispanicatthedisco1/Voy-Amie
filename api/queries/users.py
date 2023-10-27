@@ -63,15 +63,16 @@ class UsersRepository:
                         hashed_password,
                         user.email,
                         user.bio,
-                        user.profile_pic
-                    ]
+                        user.profile_pic,
+                    ],
                 )
                 user_id = result.fetchone()[0]
                 old_data = user.dict()
                 return UserOutWithPassword(
                     user_id=user_id,
                     hashed_password=hashed_password,
-                    **old_data)
+                    **old_data
+                )
 
     def get(self, username: str) -> Optional[UserOutWithPassword]:
         try:
@@ -99,7 +100,8 @@ class UsersRepository:
                         hashed_password=record[2],
                         email=record[3],
                         bio=record[4],
-                        profile_pic=record[5])
+                        profile_pic=record[5],
+                    )
         except Exception as e:
             print(e)
             return {"message": "Could not get user."}
@@ -119,7 +121,7 @@ class UsersRepository:
                         user = UsersOut(
                             user_id=record[0],
                             username=record[1],
-                            email=record[2]
+                            email=record[2],
                         )
                         user_list.append(user)
                     return user_list
