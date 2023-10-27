@@ -14,7 +14,7 @@ Members:
 
   Abraham Gebreselassie: Trips Page, Trips API, Friends API
   Hector Elias: Create Trip Page, Comments API
-  Juan Chavez: Trip Final Page, Country API, Participants API
+  Juan Chavez: Trip Final Page, Country API, Participants API,
   Miguel Ortiz: Profile Page, Activities API, Participants API
 
 
@@ -45,6 +45,7 @@ Design:
   Voy-Amie's Backend is build on FastAPI and a PostreSQL Database, the Front end consists of React and JSX for stylization.
 ## Design
 ![1.PNG](1.PNG)
+![cruds](cruds.png)
 ![API's.PNG](API's.PNG)
 ![Models.PNG](Models.PNG)
 ![pages.PNG](Pages.PNG)
