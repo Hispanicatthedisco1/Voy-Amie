@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 function TripDetail() {
   let params = useParams();
@@ -18,6 +19,7 @@ function TripDetail() {
   const [participants, setParticipants] = useState([]);
   const [user, setUser] = useState([]);
   const [votes, setVotes] = useState([]);
+  const [trip, setTrip] = useState([]);
 
   function countParticipants(participants) {
     let count = 1;
@@ -87,14 +89,25 @@ function TripDetail() {
       setUser(userData);
     }
   };
+
+  const fetchTripData = async () => {
+    const tripURL = `${process.env.REACT_APP_API_HOST}/trips/${paramsInt}`;
+    const response = await fetch(tripURL, { credentials: "include" });
+    if (response.ok) {
+      const data = await response.json();
+      setTrip(data);
+    }
+  };
+
   useEffect(() => {
     getActivitiesData();
     getCommentsData();
     getParticipantsData();
     getLoggedInUserData();
     getVotesData();
+    fetchTripData();
   }, []); //eslint-disable-line react-hooks/exhaustive-deps
-  console.log(votes);
+
   const handleUpvote = async (
     activity_id,
     title,
@@ -285,9 +298,22 @@ function TripDetail() {
     });
   };
 
+  const isPlanner = () => {
+    if (user?.user?.username === trip.planner) {
+      return true;
+    }
+  };
+
+  console.log(isPlanner());
+  const isParticipant = participants.some(
+    (participants) => participants?.participant_id === user?.user?.user_id
+  );
+  if (!(isParticipant || isPlanner())) {
+    return <p>You are not the Planner or a Participant</p>;
+  }
   return (
     <>
-      <h1>Trip ID: {params.trip_id}</h1>
+      <h1>{trip?.trip_name}</h1>
       <div className="shadow p-4 mt-4">
         <h1>Add An Activity</h1>
         <form onSubmit={handleSubmit} id="create-customer-form">
@@ -455,9 +481,9 @@ function TripDetail() {
           <button className="btn btn-primary">Create</button>
         </form>
       </div>
-      <a href={`/finalized/${paramsInt}`}>
+      <Link to={`/finalized/${paramsInt}`}>
         <button className="btn btn-success mt-4">TripsFinalized</button>
-      </a>
+      </Link>
     </>
   );
 }
