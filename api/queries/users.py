@@ -166,7 +166,7 @@ class UsersRepository:
                         SET bio=%s,
                         profile_pic=%s
                         WHERE user_id=%s
-                        RETURNING *
+                        RETURNING user_id, username, email, bio, profile_pic
                         """,
                         [
                             user.bio,
