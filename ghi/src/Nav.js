@@ -30,17 +30,13 @@ function Nav() {
                 <NavLink className="nav-link" to="/">
                   Homepage
                 </NavLink>
-              </li>          
+              </li>
               <li className="nav-item">
                 <NavLink className="nav-link" to="/profile">
                   Profile
                 </NavLink>
               </li>
-              <li className="nav-item">
-                <NavLink className="nav-link" to="/finalized">
-                  Itinerary
-                </NavLink>
-              </li>
+
               <li className="nav-item">
                 <NavLink className="nav-link" to="/trips">
                   Create Trip
@@ -62,7 +58,7 @@ function Nav() {
                 <NavLink className="nav-link" to="/login" onClick={logout} >
                   Logout
                 </NavLink>
-              </li>            
+              </li>
               </>
           </ul>
         </div>
