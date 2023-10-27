@@ -46,6 +46,8 @@ function CreateTrip() {
       setCountry("");
       setStartDate("");
       setEndDate("");
+
+      window.location.href = "/profile";
     }
   };
 
