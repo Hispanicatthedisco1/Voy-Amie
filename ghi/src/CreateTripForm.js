@@ -106,7 +106,7 @@ function CreateTrip() {
                 <option value="">Choose a Country</option>
                 {countries.map((country) => {
                   return (
-                    <option value={country.country_id} key={country.country_id}>
+                    <option value={country.country_name} key={country.country_id}>
                       {country.country_name}
                     </option>
                   );

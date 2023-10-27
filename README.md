@@ -13,7 +13,7 @@ Project URLS:
 Members:
 
   Abraham Gebreselassie: Trips Page, Trips API, Friends API
-  Hector Elias: Create Trip Page, Comments API
+  Hector Elias: Create Trip Form Page, Make Participant Page, Add Friends Page, Comments API
   Juan Chavez: Trip Final Page, Country API, Participants API,
   Miguel Ortiz: Profile Page, Activities API, Participants API
 
@@ -73,3 +73,14 @@ Voy-Amie Overview:
     -Routers:
       Allows us to route the paths of our objects we want to create to communicate with the database.
       Router files and Queries files work together to make sure information is being stored and sent back and forth when called.
+
+## Frontend Description
+
+  - Create Trip:
+    In this page, the logged in user is able to input data into a form to create a trip. The data they input is Trip Name, the Destination's City and Country (a dropdown selection), and Start and End dates for the trip. Once filled out, the user clicks on the submission button and is guided back to their profile page. They will be able to see the trip they just created in the Trips List with its information.
+
+  - Make Participant:
+    This page is only accessible to a trip's planner. The planner will be able to see a button in the Trip's Detail page that upon click will direct them to the page where they will be shown a list of their friends and a list of existing trip participants. The friends list will only show friends that are not yet participants to the current trip with a button on each friend row that upon clicking will make them a participant. This functionality will dynamically remove them from the friends list, then add them to the Participants list below. A similar functionality happens when the button next ot a participant's name is clicked. It removes them as a participant and they are again displayed on the friends list.
+
+  - Add Friends Page:
+    This feature's page is accessible by clicking the 'Add Friend' button on any logged in user's profile page. This directs them to the page that displays a search bar. The user is to type in the username of a fellow existing user that they want to befriend. The dynamic search bar starts to populate a list of users whose username includes what the current user is typing within the search bar.
