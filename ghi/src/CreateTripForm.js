@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 function CreateTrip() {
   const [countries, setCountries] = useState([]);
@@ -18,6 +19,8 @@ function CreateTrip() {
     }
   };
 
+  const navigate = useNavigate();
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -29,6 +32,7 @@ function CreateTrip() {
     data.start_date = startDate;
     data.end_date = endDate;
 
+
     const tripUrl = `${process.env.REACT_APP_API_HOST}/trips`;
     const fetchOptions = {
       method: "post",
@@ -39,6 +43,8 @@ function CreateTrip() {
       credentials: "include",
     };
 
+    navigate('/profile');
+
     const tripResponse = await fetch(tripUrl, fetchOptions);
     if (tripResponse.ok) {
       setTripName("");
@@ -46,8 +52,6 @@ function CreateTrip() {
       setCountry("");
       setStartDate("");
       setEndDate("");
-
-      window.location.href = "/profile";
     }
   };
 
