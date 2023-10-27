@@ -1,12 +1,17 @@
 ## Oct 26, 2023
-Today was a really frustrating day. Abe pointed out we still needed to make a component for making friends and displaying a friends list. I quickly jumped on it since I had an idea on how to design this. I did not want to display a list of all existing users to the logged in user as that is a no-no, so I wanted to make it so someone types another user's username and as the person types, a list with usernames that contain those characters starts to populate. The setup for this component was fairly easy as I just had to fetch data for all users and all of the user's already existing friends then create a POST method fetch that takes care of creating that friendship of the selected user. I thought of fetching for existing friends in order to conditionally render users that are not yet friends with the user that is logged in. This will avoid duplicate friendships since we did not set friendships to UNIQUE in our tables. That is where the tricky part came. I started by creating a function that determines whether or not someone is already your friend. Implementing it into the return statement as a ternary was not working. Jordan spent some time troubleshooting with me and Abe. It ended up being that we needed to make it into a normal "if" statement and not a ternary function. It is funny how some methods will works in some instances, but not in others. During this session, Jordan also helped me and Abe with styling buttons. I learned about manipulating the padding and margins of a button!!
+
+Today was a really frustrating day. Abe pointed out we still needed to make a component for making friends and displaying a
+friends list. I quickly jumped on it since I had an idea on how to design this. I did not want to display a list of all existing
+users to the logged in user as that is a no-no, so I wanted to make it so someone types another user's username and as the person types, a list with usernames that contain those characters starts to populate. The setup for this component was fairly easy as I just had to fetch data for all users and all of the user's already existing friends then create a POST method fetch that takes care of creating that friendship of the selected user. I thought of fetching for existing friends in order to conditionally render users that are not yet friends with the user that is logged in. This will avoid duplicate friendships since we did not set friendships to UNIQUE in our tables. That is where the tricky part came. I started by creating a function that determines whether or not someone is already your friend. Implementing it into the return statement as a ternary was not working. Jordan spent some time troubleshooting with me and Abe. It ended up being that we needed to make it into a normal "if" statement and not a ternary function. It is funny how some methods will works in some instances, but not in others. During this session, Jordan also helped me and Abe with styling buttons. I learned about manipulating the padding and margins of a button!!
 
 
 ## Oct 25, 2023
+
 I am still working on the participants component. SPecifically extracting the user's username and comparing it to the participants list to make sure the only users that are not yet participants be displayed in a friends list (where they can add them as participants) . It has proven very difficult to find the logic and reasoning I will need to filter the friends list from the frontend. I had a meeting with Paul and he suggested I take care of that filtering through the backend. So, I looked into updating the SQL statement for get_all_participants. I was rather proud that I was able to come up with a clever SQL JOIN statement that collected all the necessary data into one list, instead of having to deal with comparing 3 lists of data with each other! This was very revelatory and really set my on the right path! I was finally able to finish this feature and got it to behave the way I wanted it to. Now I have to work on creating a button that only a trip's planner will have access to that will redirect them to this component.
 
 
 ## Oct 24, 2023
+
 Today I took the reigns and started the day by assigning tasks to everyone and keeping track of their progress throughout the day. I also focused on helping Abe with his component as he has been stuck on it for around two days now. His component seemed to be the most complex for sure. We were trying to tackle the hard task of keeping track of votes and creating them. We spent most of the day working on it. We had to end up creating a new DB table for votes and POST, DELETE, and GET endpoints. We busted that out quite quickly. We learned about and implemented the UNIQUE keyword in out table. Assuring that a user only gets one vote bypassing duplicate edge cases. This felt like a very productive day. We ended up getting it all done! I definitely am starting to feel a bit bad at the current styling of our project, but I know we will have time to jush it up next week during stretch goals week.
 
 
@@ -18,15 +23,45 @@ I met with Rosheen and we still could not find a solution to the problem. I did 
 
 
 ## Oct 19, 2023
+
 Still working on the FE Create Trip component. I have been quite stuck on how to implement a feature that adds a participant while making a trip. Created all the fetch data functions and set states, just seeing now how to manipulate the return statement.
 
 
+
 ## Oct 18, 2023
+
 Bugs: How to gain access to a friend's username since friendships only contain user_id's.
 Solution: Was able to update out get friend router. it now uses two repos (friends and users) and uses the UserOut model when returning data for the user that is 'your' friends (user2_id).
 I did not know you could do that!
 
+
+
 ## Oct 17, 2023
+
+Finally started to work on FE component. Got the skeletal beginnings of it all done. Still white boarding how to go about displaying the list of friends that I would want to display to eventually make participants.
+
+
+
+## Oct 13, 2023
+
+Before leaving for the weekend we are trying to finish up our backend api endpoints. Had a little trouble making sense of how to protect them through the router.
+
+Turns out we can do so by accessing the user's data via the authenticator! That helped me take care of the rest of the endpoints for Comments.
+
+
+
+## Oct 12, 2023
+
+We all broke off and were given a table to write endpoints for in the backend.
+I got Comments and need to create a POST, GET (2), PUT and DELETE endpoints for this table. Once I got the swing of things it was not too hard to accomplish this task. No blockers or bugs
+
+
+
+## Oct 11, 2023
+
+Finished most of back end authentication. That really was extensive and took a lot of mental power. Seemed more difficult since I am still acclimating to FastAPI and how it works. Startign to understand the flow of browser -> router -> query -> back to server.
+
+
 
 
 ## Oct 09, 2023
