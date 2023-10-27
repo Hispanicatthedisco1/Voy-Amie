@@ -2,6 +2,7 @@ import { NavLink } from "react-router-dom";
 import useToken from "@galvanize-inc/jwtdown-for-react";
 
 
+
 function Nav() {
   const { logout } = useToken();
 
@@ -32,23 +33,10 @@ function Nav() {
                 </NavLink>
               </li>
               <li className="nav-item">
-                <NavLink className="nav-link" to="/profile">
-                  Profile
-                </NavLink>
-              </li>
-
-              <li className="nav-item">
-                <NavLink className="nav-link" to="/trips">
-                  Create Trip
-                </NavLink>
-              </li>
-
-              <li className="nav-item">
                 <NavLink className="nav-link" to="/login">
                   Login
                 </NavLink>
               </li>
-
               <li className="nav-item">
                 <NavLink className="nav-link" to="/users">
                   Sign up

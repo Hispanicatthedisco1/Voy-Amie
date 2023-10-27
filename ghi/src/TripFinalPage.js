@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 function TripsFinalized() {
   const [participants, setParticipants] = useState([]);
@@ -9,6 +9,7 @@ function TripsFinalized() {
   let { trip_id } = useParams();
   let trip_id_int = parseInt(trip_id);
   const [trip, setTrip] = useState([]);
+  const navigate = useNavigate();
 
   const filteredDate = activities.filter((activity) =>
     activity.date.includes(query)
@@ -133,6 +134,14 @@ function TripsFinalized() {
             })}
           </tbody>
         </table>
+        <div>
+          <button
+            className="btn btn-primary btn-sm m-1"
+            onClick={() => navigate("/profile")}
+          >
+            Go to Profile
+          </button>
+        </div>
       </div>
     </>
   );

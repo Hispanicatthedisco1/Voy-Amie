@@ -173,6 +173,14 @@ const UserProfileForm = () => {
             })}
           </tbody>
         </table>
+        <div>
+          <button
+            className="btn btn-primary btn-sm m-1"
+            onClick={() => navigate("/trips")}
+          >
+            Create a Trip
+          </button>
+        </div>
       </div>
     </>
   );

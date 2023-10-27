@@ -311,7 +311,6 @@ function TripDetail() {
     isPlanner();
   }, []); //eslint-disable-line react-hooks/exhaustive-deps
 
-  console.log(isPlanner());
 
   const isParticipant = participants.some(
     (participants) => participants?.user_id === user?.user?.user_id
@@ -505,7 +504,7 @@ function TripDetail() {
       <div className="shadow p-4 mt-4">
         <h1>Add A Comment</h1>
         <form onSubmit={handleCommentSubmit} id="create-customer-form">
-          <div className="form-floating mb-3">
+          <div className="form-floating mb-2 ">
             <input
               value={formCommentData.comment}
               onChange={handleCommentFormChange}
@@ -518,12 +517,20 @@ function TripDetail() {
             />
             <label htmlFor="comment">Comment</label>
           </div>
-          <button className="btn btn-primary">Create</button>
+          <button className="btn btn-primary btn-sm m-1">Create</button>
         </form>
       </div>
       <Link to={`/finalized/${paramsInt}`}>
-        <button className="btn btn-success mt-4">TripsFinalized</button>
+        <button className="btn btn-success btn-sm m-1">TripsFinalized</button>
       </Link>
+      <div>
+        <button
+          className="btn btn-primary btn-sm m-1"
+          onClick={() => navigate("/profile")}
+        >
+          Go to Profile
+        </button>
+      </div>
     </>
   );
 }
