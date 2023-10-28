@@ -93,3 +93,63 @@ Voy-Amie Overview:
 
   - Add Friends Page:
     This feature's page is accessible by clicking the 'Add Friend' button on any logged in user's profile page. This directs them to the page that displays a search bar. The user is to type in the username of a fellow existing user that they want to befriend. The dynamic search bar starts to populate a list of users whose username includes what the current user is typing within the search bar.
+
+
+### Miguel's Backend and Frontend Contribution
+
+
+-  Profile Frontend: When someone signs up or logs in, they are redirected to the profile page. If the user has given a url link for their profile picture, it will render an image once they input it. The Bio is in a text box where the user can write anything they want to add and save those updates. The profile page also pulls data and gets it listed when a trip is created. The following work was completed by the rest of the team. The trip name has a link where it redirects the user to that trip where they can create activities associated to that trip, voting can be done on those activities and also place comments. Once the votes and have reached a 50% threshold, it gets added to the finalized trip page. 
+
+
+Activities BackEnd Endpoints:
+These are the endpoints that were created for the "/activities" endpoint.
+
+    -"/activities" 'POST' this endpoint is what is creating a activity, where the it's associated to a trip.
+{
+  "trip": 1,
+  "title": "Going to Vegas",
+  "url": "vegas.com",
+  "date": "10/27/2023",
+  "time": "string",
+  "status": "string",
+  "vote": 0
+}
+
+    -"/activities" 'GET' this endpoint gets all of the activities
+[
+  {
+    "activity_id": 1,
+    "trip": 1,
+    "title": "Going to the beach",
+    "url": "la.com",
+    "date": "10/26/2023",
+    "time": "7:00 pm",
+    "status": "FINALIZED",
+    "vote": 1
+  }
+]
+
+    -"/activities/{activity_id}" 'GET' this endpoint allows a user to get an individual activity based on the activity_id
+  {
+    "activity_id": 1,
+    "trip": 1,
+    "title": "Going to the beach",
+    "url": "la.com",
+    "date": "10/26/2023",
+    "time": "7:00 pm",
+    "status": "FINALIZED",
+    "vote": 1
+  }
+
+    -"activities/{activity_id}" 'PUT' allows a user to update an activity based on the activity_id
+
+  {
+    "activity_id": 1,
+    "trip": 1,
+    "title": "Going to the beach",
+    "url": "la.com",
+    "date": "10/26/2023",
+    "time": "6:00 pm",
+    "status": "FINALIZED",
+    "vote": 1
+  }
