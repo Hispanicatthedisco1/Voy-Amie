@@ -126,6 +126,7 @@ function TripDetail() {
       },
     });
     getParticipantsData();
+    countParticipants(participants);
 
     await fetch(`${process.env.REACT_APP_API_HOST}/votes`, {
       method: "POST",
@@ -167,6 +168,7 @@ function TripDetail() {
       );
     }
     getActivitiesData();
+    countParticipants(participants);
   };
   const handleDownvote = async (
     activity_id,
@@ -195,6 +197,7 @@ function TripDetail() {
     });
 
     getParticipantsData();
+    countParticipants(participants);
 
     await fetch(`${process.env.REACT_APP_API_HOST}/votes`, {
       method: "POST",
@@ -210,6 +213,7 @@ function TripDetail() {
 
     getActivitiesData();
     getVotesData();
+    countParticipants(participants);
   };
 
   const handleSubmit = async (e) => {
@@ -232,8 +236,7 @@ function TripDetail() {
 
     const response = await fetch(activityURL, fetchConfig);
     if (response.ok) {
-      const newActivity = await response.json();
-      console.log(newActivity);
+      await response.json();
 
       setFormData({
         title: "",
@@ -273,8 +276,7 @@ function TripDetail() {
 
     const response = await fetch(commentURL, fetchConfig);
     if (response.ok) {
-      const newActivity = await response.json();
-      console.log(newActivity);
+      await response.json();
 
       setFormCommentData({
         comment: "",
@@ -309,8 +311,8 @@ function TripDetail() {
     getVotesData();
     fetchTripData();
     isPlanner();
+    countParticipants(participants);
   }, []); //eslint-disable-line react-hooks/exhaustive-deps
-
 
   const isParticipant = participants.some(
     (participants) => participants?.user_id === user?.user?.user_id
@@ -318,87 +320,36 @@ function TripDetail() {
   if (!(isParticipant || isPlanner())) {
     return <p>You are not the Planner or a Participant</p>;
   }
-  console.log(isParticipant);
+
   return (
     <>
-      <h1>{trip?.trip_name}</h1>
-      <div className="shadow p-4 mt-4">
-        <h1>Add An Activity</h1>
-        <form onSubmit={handleSubmit} id="create-customer-form">
-          <div className="form-floating mb-3">
-            <input
-              value={formData.title}
-              onChange={handleFormChange}
-              placeholder="Title"
-              required
-              type="text"
-              id="title"
-              name="title"
-              className="form-control"
-            />
-            <label htmlFor="title">Title</label>
-          </div>
-          <div className="form-floating mb-3">
-            <input
-              value={formData.url}
-              onChange={handleFormChange}
-              placeholder="URL"
-              required
-              type="text"
-              id="url"
-              name="url"
-              className="form-control"
-            />
-            <label htmlFor="url">URL</label>
-          </div>
-          <div className="form-floating mb-3">
-            <input
-              value={formData.date}
-              onChange={handleFormChange}
-              placeholder="Date"
-              required
-              type="text"
-              id="date"
-              name="date"
-              className="form-control"
-              maxLength={14}
-            />
-
-            <label htmlFor="date">Date</label>
-          </div>
-          <div className="form-floating mb-3">
-            <input
-              value={formData.time}
-              onChange={handleFormChange}
-              placeholder="Time"
-              required
-              type="text"
-              id="time"
-              name="time"
-              className="form-control"
-            />
-            <label htmlFor="">Time</label>
-          </div>
-          <button className="btn btn-primary">Create</button>
-        </form>
-      </div>
+      <h1 className="text-center m-3">{trip?.trip_name}</h1>
+      <Link to={`/finalized/${paramsInt}`}>
+        <button
+          className="btn btn btn-sm m-2"
+          style={{
+            position: "fixed",
+            right: "0px",
+            backgroundColor: "#0077b6",
+            color: "white",
+          }}
+        >
+          TripsFinalized
+        </button>
+      </Link>
       <h2>Participants</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Trip Pals</th>
-          </tr>
-        </thead>
-        <tbody>
-          {participants.map((participant) => {
-            return (
-              <tr key={participant.participant_id} value={participant.username}>
-                <td>{participant.username}</td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+
+      {participants.map((participant) => {
+        return (
+          <p
+            key={participant.participant_id}
+            value={participant.username}
+            className="d-inline-block mx-4"
+          >
+            {participant.username}
+          </p>
+        );
+      })}
       {isPlanner() ? (
         <div>
           <button
@@ -410,126 +361,311 @@ function TripDetail() {
         </div>
       ) : null}
       <div>
-        <h2>Comments</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Commenter</th>
-              <th>Comment</th>
-            </tr>
-          </thead>
-          <tbody>
-            {comments.map((comments) => {
-              return (
-                <tr key={comments.comment_id}>
-                  <td>{comments.commenter}</td>
-                  <td>{comments.comment}</td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
-      <div>
-        <h2>Activities</h2>
-        <table>
-          <thead>
-            <tr>
-              <td>Title</td>
-              <td>Date</td>
-              <td>Time</td>
-              <td>Status</td>
-              <td>Vote Count</td>
-              <td>Vote!</td>
-            </tr>
-          </thead>
-          <tbody>
-            {activities.map((activities) => {
-              if (
-                paramsInt === activities.trip &&
-                activities.status === "PENDING"
-              ) {
-                return (
-                  <tr key={activities.activity_id}>
-                    <td className="text-center align-middle">
+        <h2 className="mb-3">Activities</h2>
+        {activities.map((activities) => {
+          if (
+            paramsInt === activities.trip &&
+            activities.status === "PENDING"
+          ) {
+            return (
+              <div
+                className="accordion mb-2"
+                id="accordionExample"
+                key={activities.activity_id}
+              >
+                <div className="accordion-item">
+                  <h2 className="accordion-header">
+                    <button
+                      className="accordion-button collapsed"
+                      type="button"
+                      data-bs-toggle="collapse"
+                      data-bs-target={`#collapseTwo${activities.activity_id}`}
+                      aria-expanded="false"
+                      aria-controls="collapseTwo"
+                      style={{ opacity: 0.5 }}
+                    >
                       {activities.title}
-                    </td>
-                    <td>{activities.date}</td>
-                    <td>{activities.time}</td>
-                    <td>{activities.status}</td>
-                    <td>{activities.vote}</td>
-                    {votes.includes(activities.activity_id) ? null : (
-                      <td>
-                        <button
-                          onClick={() =>
-                            handleUpvote(
-                              activities.activity_id,
-                              activities.title,
-                              activities.url,
-                              activities.date,
-                              activities.time,
-                              activities.status,
-                              activities.vote
-                            )
-                          }
-                        >
-                          Yes
-                        </button>
-                        <button
-                          onClick={() =>
-                            handleDownvote(
-                              activities.activity_id,
-                              activities.title,
-                              activities.url,
-                              activities.date,
-                              activities.time,
-                              activities.status,
-                              activities.vote
-                            )
-                          }
-                        >
-                          No
-                        </button>
-                      </td>
-                    )}
-                  </tr>
-                );
-              } else {
-                return null;
-              }
-            })}
-          </tbody>
-        </table>
+                    </button>
+                  </h2>
+                  <div
+                    id={`collapseTwo${activities.activity_id}`}
+                    className="accordion-collapse collapse"
+                    data-bs-parent="#accordionExample"
+                  >
+                    <div className="accordion-body">
+                      <p>Status: {activities.status}</p>
+                      <p>Date: {activities.date}</p>
+                      <p>Time: {activities.time}</p>
+                      <p>
+                        Link:
+                        <Link to={activities.url}>{activities.title}</Link>
+                      </p>
+                      <p>Vote: {activities.vote}</p>
+                      <span>
+                        {votes.includes(activities.activity_id) ? null : (
+                          <>
+                            <button
+                              className="btn btn p-2 m-2 rounded-circle btn-sm"
+                              style={{ backgroundColor: "#16f796" }}
+                              onClick={() =>
+                                handleUpvote(
+                                  activities.activity_id,
+                                  activities.title,
+                                  activities.url,
+                                  activities.date,
+                                  activities.time,
+                                  activities.status,
+                                  activities.vote
+                                )
+                              }
+                            >
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="16"
+                                height="16"
+                                fill="currentColor"
+                                className="bi bi-arrow-up"
+                                viewBox="0 0 16 16"
+                              >
+                                <path
+                                  fillRule="evenodd"
+                                  d="M8 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L7.5 2.707V14.5a.5.5 0 0 0 .5.5z"
+                                />
+                              </svg>
+                            </button>
+                            <button
+                              className="btn btn p-2 rounded-circle btn-sm"
+                              style={{ backgroundColor: "#f5182f" }}
+                              onClick={() =>
+                                handleDownvote(
+                                  activities.activity_id,
+                                  activities.title,
+                                  activities.url,
+                                  activities.date,
+                                  activities.time,
+                                  activities.status,
+                                  activities.vote
+                                )
+                              }
+                            >
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="16"
+                                height="16"
+                                fill="currentColor"
+                                className="bi bi-arrow-down"
+                                viewBox="0 0 16 16"
+                              >
+                                <path
+                                  fillRule="evenodd"
+                                  d="M8 1a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L7.5 13.293V1.5A.5.5 0 0 1 8 1z"
+                                />
+                              </svg>
+                            </button>
+                          </>
+                        )}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          } else {
+            return null;
+          }
+        })}
       </div>
-      <div className="shadow p-4 mt-4">
-        <h1>Add A Comment</h1>
-        <form onSubmit={handleCommentSubmit} id="create-customer-form">
-          <div className="form-floating mb-2 ">
-            <input
-              value={formCommentData.comment}
-              onChange={handleCommentFormChange}
-              placeholder="Comment"
-              required
-              type="text"
-              id="comment"
-              name="comment"
-              className="form-control"
-            />
-            <label htmlFor="comment">Comment</label>
+      <button
+        type="button"
+        className="btn btn-primary"
+        data-bs-toggle="modal"
+        data-bs-target="#staticBackdrop"
+        style={{ backgroundColor: "#0096c7" }}
+      >
+        Add Activity
+      </button>
+      <div
+        className="modal fade"
+        id="staticBackdrop"
+        data-bs-backdrop="static"
+        data-bs-keyboard="false"
+        tabIndex="-1"
+        aria-labelledby="staticBackdropLabel"
+        aria-hidden="true"
+      >
+        <div className="modal-dialog">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h1
+                className="modal-title fs-5 text-center"
+                id="staticBackdropLabel"
+              >
+                Add An Activity
+              </h1>
+              <button
+                type="button"
+                className="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <form onSubmit={handleSubmit} id="create-customer-form">
+              <div className="modal-body">
+                <label htmlFor="title">Title</label>
+                <input
+                  value={formData.title}
+                  onChange={handleFormChange}
+                  placeholder="Title"
+                  required
+                  type="text"
+                  id="title"
+                  name="title"
+                  className="form-control mb-2"
+                />
+
+                <label htmlFor="url">URL</label>
+                <input
+                  value={formData.url}
+                  onChange={handleFormChange}
+                  placeholder="URL"
+                  required
+                  type="text"
+                  id="url"
+                  name="url"
+                  className="form-control mb-2"
+                />
+
+                <label htmlFor="date">Date</label>
+                <input
+                  value={formData.date}
+                  onChange={handleFormChange}
+                  placeholder="Date"
+                  required
+                  type="text"
+                  id="date"
+                  name="date"
+                  className="form-control mb-2"
+                />
+
+                <label htmlFor="">Time</label>
+                <input
+                  value={formData.time}
+                  onChange={handleFormChange}
+                  placeholder="Time"
+                  required
+                  type="text"
+                  id="time"
+                  name="time"
+                  className="form-control"
+                />
+              </div>
+              <div className="modal-footer">
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  data-bs-dismiss="modal"
+                >
+                  Create
+                </button>
+              </div>
+            </form>
           </div>
-          <button className="btn btn-primary btn-sm m-1">Create</button>
-        </form>
+        </div>
       </div>
-      <Link to={`/finalized/${paramsInt}`}>
-        <button className="btn btn-success btn-sm m-1">TripsFinalized</button>
-      </Link>
+
       <div>
-        <button
-          className="btn btn-primary btn-sm m-1"
-          onClick={() => navigate("/profile")}
-        >
-          Go to Profile
-        </button>
+        <h2 className="my-3">Comments</h2>
+        {comments.map((comments) => {
+          return (
+            <div
+              className="accordion mb-2"
+              id="accordionExample"
+              key={comments.comment_id}
+            >
+              <div className="accordion-item">
+                <h2 className="accordion-header">
+                  <button
+                    className="accordion-button collapsed"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target={`#collapseTwo${comments.comment_id}`}
+                    aria-expanded="false"
+                    aria-controls="collapseTwo"
+                  >
+                    {comments.commenter}
+                  </button>
+                </h2>
+                <div
+                  id={`collapseTwo${comments.comment_id}`}
+                  className="accordion-collapse collapse"
+                  data-bs-parent="#accordionExample"
+                >
+                  <div className="accordion-body">
+                    <p>{comments.comment}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      <button
+        type="button"
+        className="btn btn-primary"
+        data-bs-toggle="modal"
+        data-bs-target="#exampleModal"
+        style={{ backgroundColor: "#0096c7" }}
+      >
+        Add Comment
+      </button>
+
+      <div
+        className="modal fade"
+        id="exampleModal"
+        tabIndex="-1"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+      >
+        <div className="modal-dialog">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h1 className="modal-title fs-5" id="exampleModalLabel">
+                Add A Comment
+              </h1>
+              <button
+                type="button"
+                className="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <form onSubmit={handleCommentSubmit} id="create-customer-form">
+              <div className="modal-body">
+                <label htmlFor="comment">Comment</label>
+                <input
+                  value={formCommentData.comment}
+                  onChange={handleCommentFormChange}
+                  placeholder="Comment"
+                  required
+                  type="text"
+                  id="comment"
+                  name="comment"
+                  className="form-control"
+                />
+              </div>
+              <div className="modal-footer">
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  data-bs-dismiss="modal"
+                >
+                  Create
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
       </div>
     </>
   );
