@@ -7,12 +7,14 @@ const UserProfileForm = () => {
   const [userIdInt, setUserIdInt] = useState(0);
   const [bio, setBio] = useState("");
   const [profile_pic, setProfilePic] = useState("");
-  const [trips, setTrips] = useState([]);
+  const [plannerTrips, setPlannerTrips] = useState([]);
+  const [myTrips, setMyTrips] = useState([]);
   const [trip_query, setTripQuery] = useState("");
   const { token } = useToken();
   const navigate = useNavigate();
 
-  const getTripsData = async () => {
+
+  const getPlannerTripsData = async () => {
     const tripUrl = `${process.env.REACT_APP_API_HOST}/trips`;
     const response = await fetch(tripUrl, {
       credentials: "include",
@@ -20,11 +22,24 @@ const UserProfileForm = () => {
 
     if (response.ok) {
       const tripsData = await response.json();
-      setTrips(tripsData);
+      setPlannerTrips(tripsData);
     } else {
       console.log(response);
     }
   };
+
+  const getMyTrips = async () => {
+    const tripsUrl = `${process.env.REACT_APP_API_HOST}/trips/id/${userIdInt}`;
+    const response = await fetch(tripsUrl, {
+      credentials: "include",
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      setMyTrips(data);
+    }
+  };
+
 
   const getUserData = async () => {
     const userUrl = `${process.env.REACT_APP_API_HOST}/token`;
@@ -33,7 +48,6 @@ const UserProfileForm = () => {
       credentials: "include",
     });
     const userData = await response.json();
-    console.log(userData);
 
     if (response.ok) {
       setUserIdInt(userData?.user.user_id);
@@ -51,7 +65,8 @@ const UserProfileForm = () => {
   };
 
   useEffect(() => {
-    getTripsData();
+    getPlannerTripsData();
+    getMyTrips();
     getUserData();
   }, [token]); //eslint-disable-line react-hooks/exhaustive-deps
 
@@ -77,7 +92,7 @@ const UserProfileForm = () => {
     });
   };
 
-  const filteredTrips = trips.filter((trip) =>
+  const filteredTrips = plannerTrips.filter((trip) =>
     trip.planner.includes(trip_query)
   );
 
@@ -133,7 +148,7 @@ const UserProfileForm = () => {
           Add Friends
         </button>
       </div>
-      <h1>Trip History</h1>
+      <h1>Trips I'm Planning</h1>
       <div>
         <label
           className="form-control my-sm-0"
@@ -144,8 +159,6 @@ const UserProfileForm = () => {
         <table className="table table-striped">
           <thead>
             <tr>
-              <th>Trip ID</th>
-              <th>Planner</th>
               <th>Trip Name</th>
               <th>City</th>
               <th>Country</th>
@@ -157,8 +170,6 @@ const UserProfileForm = () => {
             {filteredTrips.map((filteredTrips) => {
               return (
                 <tr key={filteredTrips.trip_id}>
-                  <td>{filteredTrips.trip_id}</td>
-                  <td>{filteredTrips.planner}</td>
                   <td>
                     <Link to={`/trips/${filteredTrips.trip_id}`}>
                       {filteredTrips.trip_name}
@@ -180,6 +191,39 @@ const UserProfileForm = () => {
           >
             Create a Trip
           </button>
+        </div>
+        <div>
+          <h1>Trips I'm Going On</h1>
+          <table className="table table-striped">
+            <thead>
+              <tr>
+                <th>Trip</th>
+                <th>City</th>
+                <th>Country</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Planner</th>
+              </tr>
+            </thead>
+            <tbody>
+              {myTrips.map((trip) => {
+                return (
+                  <tr key={trip.trip_id} value={trip.trip_name}>
+                    <td>
+                      <Link to={`/trips/${trip.trip_id}`}>
+                        {trip.trip_name}
+                      </Link>
+                    </td>
+                    <td>{trip.city}</td>
+                    <td>{trip.country}</td>
+                    <td>{trip.start_date}</td>
+                    <td>{trip.end_date}</td>
+                    <td>{trip.planner}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
         </div>
       </div>
     </>

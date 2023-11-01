@@ -13,6 +13,7 @@ from typing import Optional, Union, List
 from queries.trips import (
     TripIn,
     TripOut,
+    MyTripOut,
     TripsRepository,
     Error,
     CreateTripError,
@@ -81,6 +82,17 @@ def get_all(
 
     planner = user_data["username"]
     return repo.get_all_trips(planner=planner)
+
+
+@router.get(
+    "/trips/id/{user_id}", response_model=Union[List[MyTripOut], Error]
+)
+def get_all_trips(
+    user_id: int,
+    repo: TripsRepository = Depends(),
+    user_data: dict = Depends(authenticator.get_current_account_data),
+):
+    return repo.get_all_my_trips(user_id)
 
 
 @router.delete("/trips/{trip_id}", response_model=bool)

@@ -21,6 +21,16 @@ class TripOut(BaseModel):
     end_date: str
 
 
+class MyTripOut(BaseModel):
+    trip_id: int
+    trip_name: str
+    city: str
+    country: str
+    start_date: str
+    end_date: str
+    planner: str
+
+
 class Error(BaseModel):
     message: str
 
@@ -153,6 +163,47 @@ class TripsRepository:
                             country=record[4],
                             start_date=record[5],
                             end_date=record[6],
+                        )
+                        trip_list.append(trip)
+                    return trip_list
+        except Exception as e:
+            print(e)
+            return {"message": "Could not get all trips"}
+
+    def get_all_my_trips(self, user_id) -> Union[Error, List[MyTripOut]]:
+        try:
+            with pool.connection() as conn:
+                with conn.cursor() as db:
+                    result = db.execute(
+                        """
+                        SELECT
+                            trips.trip_id,
+                            trips.trip_name,
+                            trips.city,
+                            trips.country,
+                            trips.start_date,
+                            trips.end_date,
+                            trips.planner,
+                            users.user_id
+                        FROM trip_participants
+                        JOIN trips ON trip_participants.trip_id = trips.trip_id
+                        JOIN users ON users.user_id = trip_participants.user_id
+                        WHERE users.user_id = %s
+                        """,
+                        [user_id],
+                    )
+                    trips = result.fetchall()
+                    trip_list = []
+                    for record in trips:
+                        trip = TripOut(
+                            trip_id=record[0],
+                            trip_name=record[1],
+                            city=record[2],
+                            country=record[3],
+                            start_date=record[4],
+                            end_date=record[5],
+                            planner=record[6],
+                            user_id=record[7],
                         )
                         trip_list.append(trip)
                     return trip_list
