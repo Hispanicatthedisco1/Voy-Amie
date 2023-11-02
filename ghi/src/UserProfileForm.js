@@ -10,8 +10,13 @@ const UserProfileForm = () => {
   const [plannerTrips, setPlannerTrips] = useState([]);
   const [myTrips, setMyTrips] = useState([]);
   const [trip_query, setTripQuery] = useState("");
+  const [profilePicMinimized, setProfilePicMinimized] = useState(false);
   const { token } = useToken();
   const navigate = useNavigate();
+
+  const toggleProfilePic = () => {
+    setProfilePicMinimized(!profilePicMinimized);
+  };
 
   const getUserData = async () => {
     const userUrl = `${process.env.REACT_APP_API_HOST}/token`;
@@ -19,6 +24,7 @@ const UserProfileForm = () => {
       method: "GET",
       credentials: "include",
     });
+
     const userData = await response.json();
     console.log(userData);
     if (response.ok) {
@@ -107,15 +113,23 @@ const UserProfileForm = () => {
           className="shadow p-4 mt-4 container"
           style={{ width: "225px", height: "250px", display: "inline-block" }}
         >
-          <input
-            type="text"
-            placeholder="Enter profile pic url"
-            value={profile_pic}
-            onChange={handleProfilePicChange}
-          />
-          {profile_pic && (
-            <img src={profile_pic} className="img-thumbnail img" alt="" />
-          )}
+          <div>
+            <button className="btn btn-info btn-sm m-1" onClick={toggleProfilePic}>
+              {profilePicMinimized ? "Show Url" : "Show Profile Pic"}
+            </button>
+          </div>
+          {!profilePicMinimized ? (
+            <>
+              <input
+                type="text"
+                placeholder="Enter profile pic url"
+                value={profile_pic}
+                onChange={handleProfilePicChange}
+              />
+            </>
+          ) : (
+              <img src={profile_pic} className="img-thumbnail img" alt="" />
+            )}
         </div>
       </div>
       <div className="my-3 d-flex">
