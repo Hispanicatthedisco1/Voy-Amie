@@ -13,6 +13,33 @@ const UserProfileForm = () => {
   const { token } = useToken();
   const navigate = useNavigate();
 
+  const getUserData = async () => {
+    const userUrl = `${process.env.REACT_APP_API_HOST}/token`;
+    const response = await fetch(userUrl, {
+      method: "GET",
+      credentials: "include",
+    });
+    const userData = await response.json();
+    console.log(userData);
+    if (response.ok) {
+      setUserIdInt(userData?.user.user_id);
+      console.log(userIdInt)
+      if (userData?.user.bio === null) {
+        setBio("");
+      } else {
+        setBio(userData?.user.bio);
+      }
+      if (userData?.user.profile_pic === null) {
+        setProfilePic("");
+      } else {
+        setProfilePic(userData?.user.profile_pic);
+      }
+    }
+  };
+
+  useEffect(() => {
+    getUserData();
+  }, [token]); //eslint-disable-line react-hooks/exhaustive-deps
 
   const getPlannerTripsData = async () => {
     const tripUrl = `${process.env.REACT_APP_API_HOST}/trips`;
@@ -40,35 +67,12 @@ const UserProfileForm = () => {
     }
   };
 
-
-  const getUserData = async () => {
-    const userUrl = `${process.env.REACT_APP_API_HOST}/token`;
-    const response = await fetch(userUrl, {
-      method: "GET",
-      credentials: "include",
-    });
-    const userData = await response.json();
-
-    if (response.ok) {
-      setUserIdInt(userData?.user.user_id);
-      if (userData?.user.bio === null) {
-        setBio("");
-      } else {
-        setBio(userData?.user.bio);
-      }
-      if (userData?.user.profile_pic === null) {
-        setProfilePic("");
-      } else {
-        setProfilePic(userData?.user.profile_pic);
-      }
-    }
-  };
-
   useEffect(() => {
+    if(userIdInt !== 0){
     getPlannerTripsData();
     getMyTrips();
-    getUserData();
-  }, [token]); //eslint-disable-line react-hooks/exhaustive-deps
+    }
+  }, [userIdInt]); //eslint-disable-line react-hooks/exhaustive-deps
 
   const handleProfilePicChange = (event) => {
     setProfilePic(event.target.value);
